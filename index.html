@@ -36,13 +36,40 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #6B7280;
         }
+        /* Responsive Sidebar */
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                position: fixed;
+                left: -256px;
+                top: 0;
+                height: 100vh;
+                z-index: 50;
+                transition: left 0.3s ease-in-out;
+            }
+            .sidebar-mobile.sidebar-open {
+                left: 0;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="flex h-screen overflow-hidden">
 
         <!-- Sidebar -->
-        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+        <aside id="sidebar" class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 sidebar-mobile">
             <!-- Logo -->
             <div class="h-16 flex items-center px-6 border-b border-gray-700">
                 <a href="/" class="flex items-center gap-2">
@@ -157,18 +184,26 @@
             </div>
         </aside>
 
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Header -->
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Hamburger Menu Button (Mobile) -->
+                <button id="menu-toggle" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mr-3">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+
                 <!-- Search -->
-                <div class="relative">
+                <div class="relative flex-1 md:flex-none">
                     <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     <input
                         type="text"
                         placeholder="Search..."
-                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
                     >
                 </div>
 
@@ -209,5 +244,22 @@
 
         </div>
     </div>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('sidebar-open');
+            sidebarOverlay.classList.remove('active');
+        });
+    </script>
 </body>
 </html>

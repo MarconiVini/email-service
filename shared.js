@@ -524,6 +524,64 @@ function simulateEmailSending(recipients, callback) {
 }
 
 // ============================================
+// 5. SIDEBAR TOGGLE FUNCTIONALITY
+// ============================================
+
+/**
+ * Toggle sidebar visibility on mobile
+ */
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('sidebar-open');
+        overlay.classList.toggle('active');
+
+        // Prevent body scroll when sidebar is open
+        document.body.style.overflow = sidebar.classList.contains('sidebar-open') ? 'hidden' : '';
+    }
+}
+
+/**
+ * Close sidebar on mobile
+ */
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (sidebar && overlay) {
+        sidebar.classList.remove('sidebar-open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+/**
+ * Initialize sidebar functionality
+ * Should be called on DOMContentLoaded
+ */
+function initSidebar() {
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+
+    // Close sidebar when window is resized to desktop size
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+            closeSidebar();
+        }
+    });
+}
+
+// Auto-initialize when DOM is ready
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', initSidebar);
+}
+
+// ============================================
 // EXPORTS (for module systems if available)
 // ============================================
 
@@ -537,6 +595,9 @@ if (typeof window !== 'undefined') {
   window.showToast = showToast;
   window.simulateCSVProcessing = simulateCSVProcessing;
   window.simulateEmailSending = simulateEmailSending;
+  window.toggleSidebar = toggleSidebar;
+  window.closeSidebar = closeSidebar;
+  window.initSidebar = initSidebar;
 }
 
 // Export for ES modules
@@ -549,6 +610,9 @@ if (typeof module !== 'undefined' && module.exports) {
     daysSince,
     showToast,
     simulateCSVProcessing,
-    simulateEmailSending
+    simulateEmailSending,
+    toggleSidebar,
+    closeSidebar,
+    initSidebar
   };
 }

@@ -36,13 +36,40 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #6B7280;
         }
+        /* Responsive Sidebar */
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                position: fixed;
+                left: -256px;
+                top: 0;
+                height: 100vh;
+                z-index: 50;
+                transition: left 0.3s ease-in-out;
+            }
+            .sidebar-mobile.sidebar-open {
+                left: 0;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <div class="flex h-screen overflow-hidden">
 
         <!-- Sidebar -->
-        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+        <aside id="sidebar" class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 sidebar-mobile">
             <!-- Logo -->
             <div class="h-16 flex items-center px-6 border-b border-gray-700">
                 <a href="home.html" class="flex items-center gap-2">
@@ -157,13 +184,21 @@
             </div>
         </aside>
 
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
 
             <!-- Header -->
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
                 <!-- Search -->
-                <div class="relative">
+                <div class="flex items-center gap-4">
+                    <!-- Mobile Menu Toggle -->
+                    <button id="menu-toggle" onclick="toggleSidebar()" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-list text-2xl"></i>
+                    </button>
+                    <div class="relative">
                     <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     <input
                         type="text"
@@ -361,16 +396,19 @@
             const preSelectedCNPJs = StateManager.getSelectedCNPJs();
             const currentFilter = StateManager.getFilter();
 
-            // Use uploaded data or fall back to mock data
+            // Get base data (uploaded or mock)
+            let baseData;
             if (uploadedData && uploadedData.length > 0) {
-                recipientsData = uploadedData;
+                baseData = uploadedData;
             } else {
-                // Filter mock data based on current filter
-                recipientsData = MOCK_DATA.filter(item => {
-                    const days = daysSince(item.lastUpdate);
-                    return days >= currentFilter;
-                });
+                baseData = MOCK_DATA;
             }
+
+            // Apply filter to ALL data sources (both uploaded and mock)
+            recipientsData = baseData.filter(item => {
+                const days = daysSince(item.lastUpdate);
+                return days >= currentFilter;
+            });
 
             // Load pre-selected CNPJs from filter step
             if (preSelectedCNPJs && preSelectedCNPJs.length > 0) {
