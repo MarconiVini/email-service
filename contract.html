@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 no-print">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="home.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Fluxo de Envio Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fluxo de Envio</span>
+                    </li>
+
+                    <!-- Inicio -->
+                    <li>
+                        <a href="home.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house text-lg"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload CSV -->
+                    <li>
+                        <a href="upload.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-cloud-upload text-lg"></i>
+                            <span>Upload CSV</span>
+                        </a>
+                    </li>
+
+                    <!-- Agrupamento -->
+                    <li>
+                        <a href="grouping.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-collection text-lg"></i>
+                            <span>Agrupamento</span>
+                        </a>
+                    </li>
+
+                    <!-- Filtros -->
+                    <li>
+                        <a href="filter.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-funnel text-lg"></i>
+                            <span>Filtros</span>
+                        </a>
+                    </li>
+
+                    <!-- Selecao -->
+                    <li>
+                        <a href="recipients.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-people text-lg"></i>
+                            <span>Selecao</span>
+                        </a>
+                    </li>
+
+                    <!-- Envio -->
+                    <li>
+                        <a href="send.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-send text-lg"></i>
+                            <span>Envio</span>
+                        </a>
+                    </li>
+
+                    <!-- Configuracoes Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuracoes</span>
+                    </li>
+
+                    <!-- Configuracoes -->
+                    <li>
+                        <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Configuracoes</span>
+                        </a>
+                    </li>
+
+                    <!-- Contrato -->
+                    <li>
+                        <a href="contract.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span class="font-medium">Contrato</span>
+                        </a>
+                    </li>
+
+                    <!-- Ajuda -->
+                    <li>
+                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Ajuda</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0 no-print">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                    >
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Print Button -->
+                    <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                        <i class="bi bi-printer"></i>
+                        <span>Imprimir</span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Contract Header -->
+                <div class="bg-white rounded-xl shadow-sm p-8 mb-6 border border-gray-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">Proposta Comercial</h1>
+                            <p class="text-gray-600 mt-1">Sistema Email Engine - Automacao de Envio de Emails</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="w-16 h-16 bg-blue-500 rounded-xl flex items-center justify-center ml-auto">
+                                <i class="bi bi-envelope-paper-fill text-white text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6 text-sm">
+                        <div>
+                            <p class="text-gray-500">Data da Proposta</p>
+                            <p class="font-semibold text-gray-800">20 de Fevereiro de 2026</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Validade</p>
+                            <p class="font-semibold text-gray-800">30 dias</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500">Versao</p>
+                            <p class="font-semibold text-gray-800">1.0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Overview -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-info-circle text-blue-500"></i>
+                        Sobre o Projeto
+                    </h2>
+                    <p class="text-gray-600 leading-relaxed">
+                        O <strong>Email Engine</strong> e um sistema completo de automatizacao de envio de emails marketing/transacionais,
+                        desenvolvido para empresas que precisam manter contato regular com seus clientes sobre atualizacoes de equipamentos.
+                        O sistema permite importar dados de clientes, filtrar por periodo de atualizacao, selecionar destinatarios
+                        e disparar campanhas de email de forma automatizada e rastreavel.
+                    </p>
+                </div>
+
+                <!-- Features Section -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-grid text-blue-500"></i>
+                        Funcionalidades do Sistema
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Feature 1 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-cloud-upload text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Upload de Arquivos</h3>
+                                <p class="text-sm text-gray-600">Importacao de dados via CSV/Excel com drag-and-drop e validacao automatica</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-collection text-green-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Agrupamento Inteligente</h3>
+                                <p class="text-sm text-gray-600">Consolidacao automatica de dados por cliente (CNPJ) com contagem de equipamentos</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-funnel text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Filtros por Periodo</h3>
+                                <p class="text-sm text-gray-600">Filtragem por dias desde ultima atualizacao (15, 45, 90, 120 dias)</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-people text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Selecao de Destinatarios</h3>
+                                <p class="text-sm text-gray-600">Interface para selecao individual ou em massa dos destinatarios</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 5 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-send text-red-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Envio em Massa</h3>
+                                <p class="text-sm text-gray-600">Disparo automatizado via Mailgun com barra de progresso em tempo real</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 6 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-graph-up text-indigo-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Logs e Auditoria</h3>
+                                <p class="text-sm text-gray-600">Registro completo de todas as atividades e status de entrega</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 7 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-pause-circle text-teal-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Controle de Envio</h3>
+                                <p class="text-sm text-gray-600">Pausar, retomar ou cancelar envios a qualquer momento</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 8 -->
+                        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="bi bi-gear text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Configuracoes Flexiveis</h3>
+                                <p class="text-sm text-gray-600">Configuracao de SMTP, templates e opcoes de teste</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time Savings Section -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-clock-history text-green-500"></i>
+                        Estimativa de Economia de Trabalho Manual
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        Baseado em um volume de <strong>100 emails/mes</strong>, estimamos a seguinte economia de tempo:
+                    </p>
+
+                    <!-- Time Comparison Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="text-left p-3 font-semibold text-gray-700">Atividade</th>
+                                    <th class="text-center p-3 font-semibold text-gray-700">Processo Manual</th>
+                                    <th class="text-center p-3 font-semibold text-gray-700">Com Sistema</th>
+                                    <th class="text-center p-3 font-semibold text-green-700">Economia</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="p-3 text-gray-800">Upload e processamento de dados</td>
+                                    <td class="p-3 text-center text-gray-600">3h/mes</td>
+                                    <td class="p-3 text-center text-gray-600">10min/mes</td>
+                                    <td class="p-3 text-center font-semibold text-green-600">2h 50min</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 text-gray-800">Filtragem e selecao de clientes</td>
+                                    <td class="p-3 text-center text-gray-600">2h/mes</td>
+                                    <td class="p-3 text-center text-gray-600">15min/mes</td>
+                                    <td class="p-3 text-center font-semibold text-green-600">1h 45min</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 text-gray-800">Envio de emails individuais</td>
+                                    <td class="p-3 text-center text-gray-600">8h/mes</td>
+                                    <td class="p-3 text-center text-gray-600">10min/mes</td>
+                                    <td class="p-3 text-center font-semibold text-green-600">7h 50min</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 text-gray-800">Monitoramento e verificacao</td>
+                                    <td class="p-3 text-center text-gray-600">4h/mes</td>
+                                    <td class="p-3 text-center text-gray-600">Automatico</td>
+                                    <td class="p-3 text-center font-semibold text-green-600">4h</td>
+                                </tr>
+                                <tr class="bg-green-50 font-semibold">
+                                    <td class="p-3 text-gray-800">TOTAL MENSAL</td>
+                                    <td class="p-3 text-center text-gray-700">17 horas</td>
+                                    <td class="p-3 text-center text-gray-700">~35 minutos</td>
+                                    <td class="p-3 text-center text-green-700 text-lg">~16 horas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- ROI Calculation -->
+                    <div class="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-green-700">Valor/hora medio (analista administrativo)</p>
+                                <p class="text-2xl font-bold text-green-800">R$ 60,00</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-green-700">Economia mensal estimada</p>
+                                <p class="text-2xl font-bold text-green-800">R$ 960,00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Operational Costs -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-calculator text-purple-500"></i>
+                        Custos Operacionais (Mailgun)
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        O sistema utiliza o <strong>Mailgun</strong> como provedor de envio de emails transacionais.
+                        Abaixo estao os planos disponiveis:
+                    </p>
+
+                    <!-- Mailgun Plans -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <!-- Basic Plan -->
+                        <div class="border border-gray-200 rounded-xl p-5 hover:border-blue-300 transition-colors">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <i class="bi bi-box text-gray-600"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Basic</h3>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-800">$15<span class="text-sm font-normal text-gray-500">/mes</span></p>
+                            <p class="text-sm text-gray-600 mt-2 mb-4">10.000 emails/mes inclusos</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> API completa</li>
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> Analytics basico</li>
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> Suporte por email</li>
+                            </ul>
+                        </div>
+
+                        <!-- Foundation Plan -->
+                        <div class="border-2 border-blue-500 rounded-xl p-5 relative bg-blue-50">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
+                                Recomendado
+                            </div>
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="bi bi-building text-blue-600"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Foundation</h3>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-800">$35<span class="text-sm font-normal text-gray-500">/mes</span></p>
+                            <p class="text-sm text-blue-600 mt-2 mb-4">1o mes gratis, depois $35/mes</p>
+                            <p class="text-sm text-gray-600 mb-4">50.000 emails/mes inclusos</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> Tudo do Basic</li>
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> Analytics avancado</li>
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> Suporte prioritario</li>
+                            </ul>
+                        </div>
+
+                        <!-- Scale Plan -->
+                        <div class="border border-gray-200 rounded-xl p-5 hover:border-purple-300 transition-colors">
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="bi bi-rocket-takeoff text-purple-600"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Scale</h3>
+                            </div>
+                            <p class="text-3xl font-bold text-gray-800">$90<span class="text-sm font-normal text-gray-500">/mes</span></p>
+                            <p class="text-sm text-purple-600 mt-2 mb-4">1o mes gratis, depois $90/mes</p>
+                            <p class="text-sm text-gray-600 mb-4">100.000 emails/mes inclusos</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> Tudo do Foundation</li>
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> IPs dedicados</li>
+                                <li class="flex items-center gap-2"><i class="bi bi-check text-green-500"></i> SLA garantido</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Additional Costs -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-semibold text-gray-800 mb-3">Custos Adicionais Estimados</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                <span class="text-gray-600">Hospedagem (VPS)</span>
+                                <span class="font-semibold text-gray-800">~$5-10/mes</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                <span class="text-gray-600">Dominio (.com.br)</span>
+                                <span class="font-semibold text-gray-800">~R$ 75/ano</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                                <span class="text-gray-600">SSL (Let's Encrypt)</span>
+                                <span class="font-semibold text-green-600">Gratis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Plans -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100 print-break">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-tag text-orange-500"></i>
+                        Planos e Valores Mensais
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        Escolha o plano que melhor se adapta ao volume de emails da sua empresa:
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Basico -->
+                        <div class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Basico</h3>
+                            <p class="text-sm text-gray-500 mb-4">Para pequenas empresas</p>
+                            <p class="text-4xl font-bold text-gray-800 mb-1">R$ 497<span class="text-lg font-normal text-gray-500">/mes</span></p>
+                            <p class="text-sm text-gray-500 mb-6">+ custos Mailgun ($15/mes)</p>
+                            <ul class="space-y-3 mb-6">
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Sistema completo
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Ate 10.000 emails/mes
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Suporte por email
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Atualizacoes incluidas
+                                </li>
+                            </ul>
+                            <button class="w-full py-2 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                                Selecionar
+                            </button>
+                        </div>
+
+                        <!-- Profissional -->
+                        <div class="border-2 border-blue-500 rounded-xl p-6 relative shadow-lg">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-sm px-4 py-1 rounded-full">
+                                Mais Popular
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Profissional</h3>
+                            <p class="text-sm text-gray-500 mb-4">Para empresas em crescimento</p>
+                            <p class="text-4xl font-bold text-blue-600 mb-1">R$ 797<span class="text-lg font-normal text-gray-500">/mes</span></p>
+                            <p class="text-sm text-gray-500 mb-6">+ custos Mailgun ($35/mes)</p>
+                            <ul class="space-y-3 mb-6">
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Sistema completo
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Ate 50.000 emails/mes
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Suporte prioritario
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Relatorios avancados
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Templates personalizados
+                                </li>
+                            </ul>
+                            <button class="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                Selecionar
+                            </button>
+                        </div>
+
+                        <!-- Enterprise -->
+                        <div class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Enterprise</h3>
+                            <p class="text-sm text-gray-500 mb-4">Para grandes operacoes</p>
+                            <p class="text-4xl font-bold text-gray-800 mb-1">R$ 1.497<span class="text-lg font-normal text-gray-500">/mes</span></p>
+                            <p class="text-sm text-gray-500 mb-6">+ custos Mailgun ($90/mes)</p>
+                            <ul class="space-y-3 mb-6">
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Sistema completo
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Ate 100.000 emails/mes
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    Suporte 24/7
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    API dedicada
+                                </li>
+                                <li class="flex items-center gap-2 text-sm text-gray-600">
+                                    <i class="bi bi-check-circle-fill text-green-500"></i>
+                                    SLA garantido
+                                </li>
+                            </ul>
+                            <button class="w-full py-2 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                                Selecionar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ROI Summary -->
+                    <div class="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="bi bi-graph-up-arrow text-green-600"></i>
+                            Retorno sobre Investimento (Plano Basico)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600">Economia mensal</p>
+                                <p class="text-2xl font-bold text-green-600">R$ 960</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600">Custo do sistema</p>
+                                <p class="text-2xl font-bold text-gray-800">R$ 497</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600">Ganho liquido mensal</p>
+                                <p class="text-3xl font-bold text-green-600">R$ 463</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contract Details -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-file-earmark-check text-blue-500"></i>
+                        Detalhes do Contrato
+                    </h2>
+
+                    <div class="space-y-6">
+                        <!-- Section 1: Scope -->
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">1</span>
+                                Escopo do Servico
+                            </h3>
+                            <ul class="ml-8 text-sm text-gray-600 space-y-1 list-disc">
+                                <li>Acesso ao sistema Email Engine via web</li>
+                                <li>Importacao ilimitada de dados de clientes</li>
+                                <li>Envio de emails conforme limite do plano contratado</li>
+                                <li>Atualizacoes e correcoes de bugs inclusas</li>
+                                <li>Suporte tecnico conforme nivel do plano</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 2: Infrastructure -->
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">2</span>
+                                Infraestrutura e Custos de Terceiros
+                            </h3>
+                            <div class="ml-8 text-sm text-gray-600">
+                                <p class="mb-2">O cliente esta ciente e concorda com os seguintes custos de terceiros:</p>
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-gray-200">
+                                            <th class="text-left py-2">Servico</th>
+                                            <th class="text-right py-2">Valor Estimado</th>
+                                            <th class="text-right py-2">Responsavel</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b border-gray-100">
+                                            <td class="py-2">Mailgun (envio de emails)</td>
+                                            <td class="text-right py-2">$15 - $90/mes</td>
+                                            <td class="text-right py-2">Cliente</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-100">
+                                            <td class="py-2">Hospedagem (VPS)</td>
+                                            <td class="text-right py-2">$5 - $10/mes</td>
+                                            <td class="text-right py-2">Cliente</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="py-2">Dominio</td>
+                                            <td class="text-right py-2">~R$ 75/ano</td>
+                                            <td class="text-right py-2">Cliente</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Payment -->
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">3</span>
+                                Condicoes de Pagamento
+                            </h3>
+                            <ul class="ml-8 text-sm text-gray-600 space-y-1 list-disc">
+                                <li>Faturamento mensal com vencimento no dia 05 de cada mes</li>
+                                <li>Pagamento via boleto bancario ou PIX</li>
+                                <li>Atraso superior a 10 dias pode resultar em suspensao do servico</li>
+                                <li>Reajuste anual conforme IPCA ou indice negociado</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 4: SLA -->
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">4</span>
+                                Disponibilidade (SLA)
+                            </h3>
+                            <ul class="ml-8 text-sm text-gray-600 space-y-1 list-disc">
+                                <li>Disponibilidade garantida de 99,5% mensal</li>
+                                <li>Manutencoes programadas serao comunicadas com 48h de antecedencia</li>
+                                <li>Tempo de resposta para suporte: ate 24h (Basico), 4h (Profissional), 1h (Enterprise)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 5: Data -->
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">5</span>
+                                Dados e Privacidade
+                            </h3>
+                            <ul class="ml-8 text-sm text-gray-600 space-y-1 list-disc">
+                                <li>Os dados dos clientes sao de propriedade exclusiva do contratante</li>
+                                <li>Nao compartilhamos dados com terceiros</li>
+                                <li>Backup diario dos dados</li>
+                                <li>Conformidade com LGPD</li>
+                            </ul>
+                        </div>
+
+                        <!-- Section 6: Termination -->
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">6</span>
+                                Vigencia e Cancelamento
+                            </h3>
+                            <ul class="ml-8 text-sm text-gray-600 space-y-1 list-disc">
+                                <li>Contrato de vigencia mensal com renovacao automatica</li>
+                                <li>Cancelamento com aviso previo de 30 dias</li>
+                                <li>Em caso de cancelamento, exportacao dos dados em ate 7 dias uteis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Box -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">Valor Total Estimado Mensal</h3>
+                            <p class="text-blue-100 text-sm">Inclui sistema + infraestrutura (plano Basico)</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-4xl font-bold">R$ 620</p>
+                            <p class="text-blue-200 text-sm">~$115 USD/mes</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-blue-500 grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <p class="text-blue-200">Sistema</p>
+                            <p class="font-semibold">R$ 497</p>
+                        </div>
+                        <div>
+                            <p class="text-blue-200">Mailgun Basic</p>
+                            <p class="font-semibold">$15 (~R$ 90)</p>
+                        </div>
+                        <div>
+                            <p class="text-blue-200">Hospedagem</p>
+                            <p class="font-semibold">~R$ 50</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acceptance Section -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mt-6 border border-gray-100 no-print">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-800">Aceito os termos desta proposta</h3>
+                            <p class="text-sm text-gray-500">Ao aceitar, voce concorda com todos os termos acima</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors">
+                                Recusar
+                            </button>
+                            <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                Aceitar Proposta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+        </div>
+    </div>
+</body>
+</html>

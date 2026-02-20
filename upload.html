@@ -140,6 +140,14 @@
                         </a>
                     </li>
 
+                    <!-- Contrato -->
+                    <li>
+                        <a href="contract.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Contrato</span>
+                        </a>
+                    </li>
+
                     <!-- Ajuda -->
                     <li>
                         <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
@@ -325,9 +333,9 @@
                                 <p id="successInfo" class="text-gray-600"></p>
                             </div>
                         </div>
-                        <a href="grouping.html"
+                        <a href="grouping.html" id="continueBtn"
                             class="px-6 py-3 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2">
-                            <span>Avancar para Agrupamento</span>
+                            <span>Continuar</span>
                             <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -624,6 +632,30 @@
 
             // Load history on page load
             loadHistory();
+
+            // Check if there's already processed data and show continue button
+            function checkExistingData() {
+                const existingData = getUploadedData();
+                if (existingData && existingData.length > 0) {
+                    successInfo.textContent = `${existingData.length} registros disponiveis para processamento.`;
+                    successArea.classList.remove('hidden');
+                }
+            }
+
+            function getUploadedData() {
+                if (typeof window.StateManager !== 'undefined') {
+                    return window.StateManager.getUploadedData();
+                }
+                try {
+                    const data = localStorage.getItem('emailEngine_uploadedData');
+                    return data ? JSON.parse(data) : [];
+                } catch (error) {
+                    return [];
+                }
+            }
+
+            // Check for existing data on page load
+            checkExistingData();
 
             // Make setUploadedData available (from shared.js)
             function setUploadedData(data) {
