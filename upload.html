@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Arquivo - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- SheetJS for Excel parsing -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+
+        /* Drag and drop highlight */
+        .drop-zone.dragover {
+            border-color: #3B82F6;
+            background-color: #EFF6FF;
+        }
+
+        .drop-zone.dragover .drop-icon {
+            transform: scale(1.1);
+            color: #3B82F6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Menu Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Menu</span>
+                    </li>
+
+                    <!-- Home -->
+                    <li>
+                        <a href="index.html"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house-door text-lg"></i>
+                            <span class="font-medium">Home</span>
+                        </a>
+                    </li>
+
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-grid-1x2 text-lg"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Analytics -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+
+                    <!-- Campaigns -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-megaphone text-lg"></i>
+                            <span>Campaigns</span>
+                        </a>
+                    </li>
+
+                    <!-- Templates Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Templates</span>
+                    </li>
+
+                    <!-- Email Templates -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Email Templates</span>
+                        </a>
+                    </li>
+
+                    <!-- Layouts -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-layout-text-window text-lg"></i>
+                            <span>Layouts</span>
+                        </a>
+                    </li>
+
+                    <!-- Settings Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Settings</span>
+                    </li>
+
+                    <!-- Settings -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+
+                    <!-- Help -->
+                    <li>
+                        <a href="#"
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="Search..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button
+                        class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button
+                        class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Breadcrumb / Step Indicator -->
+                <div class="mb-6">
+                    <nav class="flex items-center gap-2 text-sm text-gray-500">
+                        <a href="index.html" class="hover:text-blue-500 transition-colors">
+                            <i class="bi bi-house-door"></i>
+                        </a>
+                        <i class="bi bi-chevron-right text-xs"></i>
+                        <span class="text-blue-500 font-medium">Upload</span>
+                    </nav>
+                    <div class="mt-2 flex items-center gap-3">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+                            Etapa 1 de 5: Upload
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Page Title -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Upload de Arquivo</h1>
+                    <p class="mt-2 text-gray-600">Fac,a upload do arquivo CSV ou XLS com os dados dos equipamentos para iniciar
+                        o processamento.</p>
+                </div>
+
+                <!-- Upload Area Card -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <!-- Drop Zone -->
+                    <div id="dropZone"
+                        class="drop-zone border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer transition-all duration-200 hover:border-blue-400 hover:bg-blue-50">
+                        <input type="file" id="fileInput" accept=".csv,.xls,.xlsx" class="hidden">
+                        <div class="drop-icon transition-all duration-200">
+                            <i class="bi bi-cloud-upload text-6xl text-gray-400"></i>
+                        </div>
+                        <p class="mt-4 text-lg text-gray-600">Arraste o arquivo CSV ou XLS aqui ou clique para selecionar</p>
+                        <p class="mt-2 text-sm text-gray-400">Arquivos .csv, .xls e .xlsx sao aceitos</p>
+                    </div>
+
+                    <!-- Selected File Info -->
+                    <div id="fileInfo" class="hidden mt-4 p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="bi bi-file-earmark-spreadsheet text-green-600 text-xl"></i>
+                                </div>
+                                <div>
+                                    <p id="fileName" class="font-medium text-gray-700">arquivo.csv</p>
+                                    <p id="fileSize" class="text-sm text-gray-500">0 KB</p>
+                                </div>
+                            </div>
+                            <button id="removeFile"
+                                class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                title="Remover arquivo">
+                                <i class="bi bi-x-lg text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Process Button -->
+                    <div class="mt-6 flex justify-end">
+                        <button id="processBtn" disabled
+                            class="px-6 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
+                            <i class="bi bi-play-fill"></i>
+                            <span>Processar Arquivo</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Area -->
+                <div id="progressArea" class="hidden bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-hourglass-split text-blue-500"></i>
+                        Processando Arquivo
+                    </h3>
+
+                    <!-- Progress Bar -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span id="progressStatus">Iniciando...</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div id="progressBar" class="bg-blue-500 h-3 rounded-full transition-all duration-300"
+                                style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error/Warning Area -->
+                <div id="errorArea" class="hidden bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-exclamation-triangle text-red-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Erro no Processamento</h3>
+                            <p id="errorMessage" class="mt-1 text-gray-600"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Area - Next Step -->
+                <div id="successArea" class="hidden bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-check-circle text-green-500 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Arquivo Processado com Sucesso!</h3>
+                                <p id="successInfo" class="text-gray-600"></p>
+                            </div>
+                        </div>
+                        <a href="grouping.html"
+                            class="px-6 py-3 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2">
+                            <span>Avancar para Agrupamento</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Processed Files History -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="bi bi-clock-history text-gray-500"></i>
+                        Arquivos Processados
+                    </h3>
+
+                    <div id="historyList" class="space-y-3">
+                        <!-- History items will be populated by JavaScript -->
+                    </div>
+
+                    <div id="emptyHistory" class="text-center py-8 text-gray-500">
+                        <i class="bi bi-inbox text-4xl mb-3 block"></i>
+                        <p>Nenhum arquivo processado anteriormente</p>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Shared JavaScript -->
+    <script src="shared.js"></script>
+
+    <!-- Page-specific JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elements
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const removeFileBtn = document.getElementById('removeFile');
+            const processBtn = document.getElementById('processBtn');
+            const progressArea = document.getElementById('progressArea');
+            const progressBar = document.getElementById('progressBar');
+            const progressStatus = document.getElementById('progressStatus');
+            const progressPercent = document.getElementById('progressPercent');
+            const errorArea = document.getElementById('errorArea');
+            const errorMessage = document.getElementById('errorMessage');
+            const successArea = document.getElementById('successArea');
+            const successInfo = document.getElementById('successInfo');
+            const historyList = document.getElementById('historyList');
+            const emptyHistory = document.getElementById('emptyHistory');
+
+            let selectedFile = null;
+
+            // Get file icon based on extension
+            function getFileIcon(fileName) {
+                const ext = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
+                if (ext === '.xls' || ext === '.xlsx') {
+                    return 'bi-file-earmark-excel';
+                }
+                return 'bi-file-earmark-spreadsheet';
+            }
+
+            // Get file icon color based on extension
+            function getFileIconColor(fileName) {
+                const ext = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
+                if (ext === '.xls' || ext === '.xlsx') {
+                    return { bg: 'bg-green-100', text: 'text-green-600' };
+                }
+                return { bg: 'bg-blue-100', text: 'text-blue-600' };
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Handle file selection
+            function handleFile(file) {
+                if (!file) return;
+
+                // Validate file type
+                const validExtensions = ['.csv', '.xls', '.xlsx'];
+                const fileExtension = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+                if (!validExtensions.includes(fileExtension)) {
+                    showToast('Por favor, selecione apenas arquivos .csv, .xls ou .xlsx', 'error');
+                    return;
+                }
+
+                selectedFile = file;
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+
+                // Update file icon based on file type
+                const iconContainer = fileInfo.querySelector('.w-10.h-10');
+                const icon = iconContainer.querySelector('i');
+                const colors = getFileIconColor(file.name);
+                iconContainer.className = `w-10 h-10 ${colors.bg} rounded-lg flex items-center justify-center`;
+                icon.className = `${getFileIcon(file.name)} ${colors.text} text-xl`;
+
+                fileInfo.classList.remove('hidden');
+                processBtn.disabled = false;
+
+                // Hide previous results
+                errorArea.classList.add('hidden');
+                successArea.classList.add('hidden');
+                progressArea.classList.add('hidden');
+            }
+
+            // Drag and drop events
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            // Remove file
+            removeFileBtn.addEventListener('click', () => {
+                selectedFile = null;
+                fileInput.value = '';
+                fileInfo.classList.add('hidden');
+                processBtn.disabled = true;
+                errorArea.classList.add('hidden');
+                successArea.classList.add('hidden');
+                progressArea.classList.add('hidden');
+            });
+
+            // Process file
+            processBtn.addEventListener('click', () => {
+                if (!selectedFile) return;
+
+                // Show progress area
+                progressArea.classList.remove('hidden');
+                errorArea.classList.add('hidden');
+                successArea.classList.add('hidden');
+                processBtn.disabled = true;
+
+                const fileExtension = selectedFile.name.toLowerCase().substring(selectedFile.name.lastIndexOf('.'));
+
+                if (fileExtension === '.csv') {
+                    // Process CSV file
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const csvData = e.target.result;
+                        processFileData(csvData);
+                    };
+                    reader.onerror = function () {
+                        showError('Erro ao ler o arquivo. Tente novamente.');
+                    };
+                    reader.readAsText(selectedFile);
+                } else if (fileExtension === '.xls' || fileExtension === '.xlsx') {
+                    // Process Excel file using SheetJS
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                            const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                            processFileData(jsonData);
+                        } catch (error) {
+                            showError('Erro ao processar arquivo Excel: ' + error.message);
+                        }
+                    };
+                    reader.onerror = function () {
+                        showError('Erro ao ler o arquivo. Tente novamente.');
+                    };
+                    reader.readAsArrayBuffer(selectedFile);
+                }
+            });
+
+            function processFileData(data) {
+                // Call shared.js processing function
+                simulateCSVProcessing(data, (progress, status, result) => {
+                    // Update progress bar
+                    progressBar.style.width = progress + '%';
+                    progressPercent.textContent = progress + '%';
+                    progressStatus.textContent = status;
+
+                    if (progress === 100 && result) {
+                        // Processing complete
+                        setTimeout(() => {
+                            progressArea.classList.add('hidden');
+
+                            // Save data using StateManager
+                            setUploadedData(result);
+
+                            // Show success
+                            successInfo.textContent = `${result.length} registros importados com sucesso.`;
+                            successArea.classList.remove('hidden');
+
+                            // Show toast
+                            showToast('Arquivo processado com sucesso!', 'success');
+
+                            // Update history
+                            addToHistory(selectedFile.name, result.length);
+
+                            // Re-enable button for new files
+                            processBtn.disabled = false;
+                        }, 500);
+                    }
+                });
+            }
+
+            function showError(message) {
+                progressArea.classList.add('hidden');
+                errorMessage.textContent = message;
+                errorArea.classList.remove('hidden');
+                processBtn.disabled = false;
+                showToast('Erro ao processar arquivo', 'error');
+            }
+
+            // History management
+            function loadHistory() {
+                const history = getProcessingHistory();
+
+                if (history.length === 0) {
+                    historyList.innerHTML = '';
+                    emptyHistory.classList.remove('hidden');
+                    return;
+                }
+
+                emptyHistory.classList.add('hidden');
+                historyList.innerHTML = history.map((item, index) => {
+                    const colors = getFileIconColor(item.fileName);
+                    const icon = getFileIcon(item.fileName);
+                    return `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 ${colors.bg} rounded-lg flex items-center justify-center">
+                                <i class="bi ${icon} ${colors.text}"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-700">${item.fileName}</p>
+                                <p class="text-sm text-gray-500">${item.recordCount} registros - ${formatDate(item.processedAt)}</p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">Processado</span>
+                    </div>
+                `}).join('');
+            }
+
+            function addToHistory(fileName, recordCount) {
+                const history = getProcessingHistory();
+                history.unshift({
+                    fileName: fileName,
+                    recordCount: recordCount,
+                    processedAt: new Date().toISOString()
+                });
+
+                // Keep only last 10 items
+                if (history.length > 10) {
+                    history.pop();
+                }
+
+                localStorage.setItem('emailEngine_processingHistory', JSON.stringify(history));
+                loadHistory();
+            }
+
+            function getProcessingHistory() {
+                try {
+                    const history = localStorage.getItem('emailEngine_processingHistory');
+                    return history ? JSON.parse(history) : [];
+                } catch (error) {
+                    return [];
+                }
+            }
+
+            // Load history on page load
+            loadHistory();
+
+            // Make setUploadedData available (from shared.js)
+            function setUploadedData(data) {
+                if (typeof window.StateManager !== 'undefined') {
+                    window.StateManager.setUploadedData(data);
+                } else {
+                    localStorage.setItem('emailEngine_uploadedData', JSON.stringify(data));
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

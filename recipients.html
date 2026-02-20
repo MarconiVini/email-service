@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecao de Destinatarios - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Menu Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Menu</span>
+                    </li>
+
+                    <!-- Home -->
+                    <li>
+                        <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house-door text-lg"></i>
+                            <span class="font-medium">Home</span>
+                        </a>
+                    </li>
+
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-grid-1x2 text-lg"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Analytics -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+
+                    <!-- Campaigns -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-megaphone text-lg"></i>
+                            <span>Campaigns</span>
+                        </a>
+                    </li>
+
+                    <!-- Templates Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Templates</span>
+                    </li>
+
+                    <!-- Email Templates -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Email Templates</span>
+                        </a>
+                    </li>
+
+                    <!-- Layouts -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-layout-text-window text-lg"></i>
+                            <span>Layouts</span>
+                        </a>
+                    </li>
+
+                    <!-- Settings Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Settings</span>
+                    </li>
+
+                    <!-- Settings -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+
+                    <!-- Help -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                    >
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Breadcrumb -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-2 text-sm text-gray-500">
+                        <i class="bi bi-geo-fill"></i>
+                        <span>Etapa 4 de 5: Selecao</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <a href="filter.html" class="px-4 py-2 text-gray-600 hover:text-gray-800 bg-gray-200 rounded-lg transition-colors flex items-center gap-2">
+                            <i class="bi bi-arrow-left"></i>
+                            Voltar
+                        </a>
+                        <a href="send.html" id="btnIniciarEnvio" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+                            Iniciar Envio
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Title Section -->
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Selecao de Destinatarios</h1>
+                    <p class="text-gray-500 mt-2">Revise e confirme os clientes que receberao os emails. Voce pode adicionar ou remover destinatarios da lista.</p>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <!-- Total Clientes -->
+                    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-building text-blue-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Total de Clientes</p>
+                                <p class="text-2xl font-bold text-gray-800" id="totalClientes">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Pecas -->
+                    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-box-seam text-green-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Total de Pecas</p>
+                                <p class="text-2xl font-bold text-gray-800" id="totalPecas">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtro Aplicado -->
+                    <div class="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-funnel text-purple-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Filtro Aplicado</p>
+                                <p class="text-2xl font-bold text-gray-800" id="filtroAplicado">15 dias</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button id="btnSelecionarTodos" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
+                        <i class="bi bi-check-all"></i>
+                        Selecionar Todos
+                    </button>
+                    <button id="btnLimparSelecao" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
+                        <i class="bi bi-x-lg"></i>
+                        Limpar Selecao
+                    </button>
+                    <button id="btnEnviarTodos" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 ml-auto">
+                        <i class="bi bi-send"></i>
+                        Enviar Todos
+                    </button>
+                    <a href="filter.html" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2">
+                        <i class="bi bi-arrow-left"></i>
+                        Voltar para Filtros
+                    </a>
+                </div>
+
+                <!-- Recipients List -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <!-- List Header -->
+                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                        <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-500">
+                            <div class="col-span-1 flex items-center">
+                                <input type="checkbox" id="checkAll" class="w-4 h-4 text-blue-500 rounded border-gray-300 focus:ring-blue-500">
+                            </div>
+                            <div class="col-span-2">CNPJ</div>
+                            <div class="col-span-3">Empresa</div>
+                            <div class="col-span-3">Email</div>
+                            <div class="col-span-1 text-center">Pecas</div>
+                            <div class="col-span-2 text-center">Status</div>
+                        </div>
+                    </div>
+
+                    <!-- List Body -->
+                    <div id="recipientsList" class="divide-y divide-gray-100">
+                        <!-- Recipients will be loaded here dynamically -->
+                        <div class="px-6 py-8 text-center text-gray-500">
+                            <i class="bi bi-inbox text-4xl mb-2"></i>
+                            <p>Carregando destinatarios...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selection Counter -->
+                <div class="mt-4 bg-blue-50 rounded-lg p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="bi bi-info-circle text-blue-500 text-xl"></i>
+                        <span class="text-blue-700">
+                            <strong id="selectedCount">0</strong> destinatario(s) selecionado(s) para envio
+                        </span>
+                    </div>
+                    <div class="text-sm text-blue-600">
+                        <span id="selectedPieces">0</span> pecas serao processadas
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Shared JavaScript -->
+    <script src="shared.js"></script>
+
+    <!-- Page Script -->
+    <script>
+        // ============================================
+        // PAGE STATE
+        // ============================================
+        let recipientsData = [];
+        let selectedCNPJs = new Set();
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRecipientsData();
+            setupEventListeners();
+        });
+
+        // ============================================
+        // DATA LOADING
+        // ============================================
+        function loadRecipientsData() {
+            // Get uploaded data from previous step
+            const uploadedData = StateManager.getUploadedData();
+            const preSelectedCNPJs = StateManager.getSelectedCNPJs();
+            const currentFilter = StateManager.getFilter();
+
+            // Use uploaded data or fall back to mock data
+            if (uploadedData && uploadedData.length > 0) {
+                recipientsData = uploadedData;
+            } else {
+                // Filter mock data based on current filter
+                recipientsData = MOCK_DATA.filter(item => {
+                    const days = daysSince(item.lastUpdate);
+                    return days >= currentFilter;
+                });
+            }
+
+            // Load pre-selected CNPJs from filter step
+            if (preSelectedCNPJs && preSelectedCNPJs.length > 0) {
+                preSelectedCNPJs.forEach(cnpj => selectedCNPJs.add(cnpj));
+            } else {
+                // If no pre-selection, select all by default
+                recipientsData.forEach(item => selectedCNPJs.add(item.cnpj));
+            }
+
+            // Update filter display
+            document.getElementById('filtroAplicado').textContent = `${currentFilter} dias`;
+
+            // Render the list
+            renderRecipientsList();
+            updateSummary();
+        }
+
+        // ============================================
+        // RENDER FUNCTIONS
+        // ============================================
+        function renderRecipientsList() {
+            const container = document.getElementById('recipientsList');
+
+            if (recipientsData.length === 0) {
+                container.innerHTML = `
+                    <div class="px-6 py-8 text-center text-gray-500">
+                        <i class="bi bi-inbox text-4xl mb-2"></i>
+                        <p>Nenhum destinatario encontrado.</p>
+                        <a href="filter.html" class="text-blue-500 hover:underline">Voltar para filtros</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = recipientsData.map(recipient => {
+                const isSelected = selectedCNPJs.has(recipient.cnpj);
+                const days = daysSince(recipient.lastUpdate);
+                const statusBadge = getStatusBadge(days);
+                const pecasCount = recipient.serialNumbers ? recipient.serialNumbers.length : 0;
+
+                return `
+                    <div class="px-6 py-4 hover:bg-gray-50 transition-colors ${isSelected ? 'bg-blue-50' : ''}" data-cnpj="${recipient.cnpj}">
+                        <div class="grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-1">
+                                <input
+                                    type="checkbox"
+                                    class="recipient-check w-4 h-4 text-blue-500 rounded border-gray-300 focus:ring-blue-500"
+                                    data-cnpj="${recipient.cnpj}"
+                                    ${isSelected ? 'checked' : ''}
+                                >
+                            </div>
+                            <div class="col-span-2">
+                                <span class="font-mono text-sm text-gray-700">${formatCNPJ(recipient.cnpj)}</span>
+                            </div>
+                            <div class="col-span-3">
+                                <span class="font-medium text-gray-800">${recipient.companyName}</span>
+                            </div>
+                            <div class="col-span-3">
+                                <span class="text-gray-600 text-sm">${recipient.email || 'N/A'}</span>
+                            </div>
+                            <div class="col-span-1 text-center">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full text-sm font-medium text-gray-700">
+                                    ${pecasCount}
+                                </span>
+                            </div>
+                            <div class="col-span-2 text-center">
+                                ${statusBadge}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update check all checkbox state
+            updateCheckAllState();
+        }
+
+        function getStatusBadge(days) {
+            const currentFilter = StateManager.getFilter();
+
+            // Determine status based on days since last update
+            let colorClass, label;
+
+            if (days <= 15) {
+                colorClass = 'bg-green-100 text-green-700';
+                label = `${days} dias`;
+            } else if (days <= 45) {
+                colorClass = 'bg-yellow-100 text-yellow-700';
+                label = `${days} dias`;
+            } else {
+                colorClass = 'bg-red-100 text-red-700';
+                label = `${days} dias`;
+            }
+
+            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass}">${label}</span>`;
+        }
+
+        function updateSummary() {
+            const selectedRecipients = recipientsData.filter(r => selectedCNPJs.has(r.cnpj));
+            const totalPecas = selectedRecipients.reduce((sum, r) => {
+                return sum + (r.serialNumbers ? r.serialNumbers.length : 0);
+            }, 0);
+
+            document.getElementById('totalClientes').textContent = recipientsData.length;
+            document.getElementById('totalPecas').textContent = totalPecas;
+            document.getElementById('selectedCount').textContent = selectedCNPJs.size;
+            document.getElementById('selectedPieces').textContent = totalPecas;
+        }
+
+        function updateCheckAllState() {
+            const checkAll = document.getElementById('checkAll');
+            const checkboxes = document.querySelectorAll('.recipient-check');
+            const checkedCount = document.querySelectorAll('.recipient-check:checked').length;
+
+            if (checkboxes.length === 0) {
+                checkAll.checked = false;
+                checkAll.indeterminate = false;
+            } else if (checkedCount === 0) {
+                checkAll.checked = false;
+                checkAll.indeterminate = false;
+            } else if (checkedCount === checkboxes.length) {
+                checkAll.checked = true;
+                checkAll.indeterminate = false;
+            } else {
+                checkAll.checked = false;
+                checkAll.indeterminate = true;
+            }
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function setupEventListeners() {
+            // Check individual recipient
+            document.getElementById('recipientsList').addEventListener('change', (e) => {
+                if (e.target.classList.contains('recipient-check')) {
+                    const cnpj = e.target.dataset.cnpj;
+                    const row = e.target.closest('[data-cnpj]');
+
+                    if (e.target.checked) {
+                        selectedCNPJs.add(cnpj);
+                        row.classList.add('bg-blue-50');
+                    } else {
+                        selectedCNPJs.delete(cnpj);
+                        row.classList.remove('bg-blue-50');
+                    }
+
+                    updateSummary();
+                    updateCheckAllState();
+                }
+            });
+
+            // Check all checkbox
+            document.getElementById('checkAll').addEventListener('change', (e) => {
+                const checkboxes = document.querySelectorAll('.recipient-check');
+                checkboxes.forEach(cb => {
+                    cb.checked = e.target.checked;
+                    const cnpj = cb.dataset.cnpj;
+                    const row = cb.closest('[data-cnpj]');
+
+                    if (e.target.checked) {
+                        selectedCNPJs.add(cnpj);
+                        row.classList.add('bg-blue-50');
+                    } else {
+                        selectedCNPJs.delete(cnpj);
+                        row.classList.remove('bg-blue-50');
+                    }
+                });
+
+                updateSummary();
+            });
+
+            // Select all button
+            document.getElementById('btnSelecionarTodos').addEventListener('click', () => {
+                const checkboxes = document.querySelectorAll('.recipient-check');
+                checkboxes.forEach(cb => {
+                    cb.checked = true;
+                    const cnpj = cb.dataset.cnpj;
+                    const row = cb.closest('[data-cnpj]');
+                    selectedCNPJs.add(cnpj);
+                    row.classList.add('bg-blue-50');
+                });
+
+                updateSummary();
+                updateCheckAllState();
+                showToast('Todos os destinatarios selecionados', 'success');
+            });
+
+            // Clear selection button
+            document.getElementById('btnLimparSelecao').addEventListener('click', () => {
+                const checkboxes = document.querySelectorAll('.recipient-check');
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                    const row = cb.closest('[data-cnpj]');
+                    row.classList.remove('bg-blue-50');
+                });
+
+                selectedCNPJs.clear();
+                updateSummary();
+                updateCheckAllState();
+                showToast('Selecao limpa', 'info');
+            });
+
+            // Send all button
+            document.getElementById('btnEnviarTodos').addEventListener('click', () => {
+                if (selectedCNPJs.size === 0) {
+                    showToast('Selecione pelo menos um destinatario', 'warning');
+                    return;
+                }
+
+                saveSelectionAndProceed();
+            });
+
+            // Header "Iniciar Envio" button
+            document.getElementById('btnIniciarEnvio').addEventListener('click', (e) => {
+                if (selectedCNPJs.size === 0) {
+                    e.preventDefault();
+                    showToast('Selecione pelo menos um destinatario', 'warning');
+                    return;
+                }
+
+                saveSelectionAndProceed();
+            });
+        }
+
+        // ============================================
+        // ACTIONS
+        // ============================================
+        function saveSelectionAndProceed() {
+            // Save final selection to state
+            StateManager.setSelectedCNPJs(Array.from(selectedCNPJs));
+
+            showToast('Selecao salva! Redirecionando...', 'success');
+
+            // Redirect to send page
+            setTimeout(() => {
+                window.location.href = 'send.html';
+            }, 500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro por Periodo - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Menu Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Menu</span>
+                    </li>
+
+                    <!-- Home -->
+                    <li>
+                        <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house-door text-lg"></i>
+                            <span class="font-medium">Home</span>
+                        </a>
+                    </li>
+
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-grid-1x2 text-lg"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Analytics -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+
+                    <!-- Campaigns -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-megaphone text-lg"></i>
+                            <span>Campaigns</span>
+                        </a>
+                    </li>
+
+                    <!-- Templates Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Templates</span>
+                    </li>
+
+                    <!-- Email Templates -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Email Templates</span>
+                        </a>
+                    </li>
+
+                    <!-- Layouts -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-layout-text-window text-lg"></i>
+                            <span>Layouts</span>
+                        </a>
+                    </li>
+
+                    <!-- Settings Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Settings</span>
+                    </li>
+
+                    <!-- Settings -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+
+                    <!-- Help -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                    >
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Breadcrumb -->
+                <div class="mb-6">
+                    <nav class="flex items-center gap-2 text-sm text-gray-500">
+                        <span class="text-blue-600 font-medium">Etapa 3 de 5: Filtros</span>
+                    </nav>
+                </div>
+
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Filtro por Periodo</h1>
+                    <p class="text-gray-600">Filtre os clientes pelo intervalo de dias desde o ultimo update. Isso ajuda a identificar clientes que precisam de contato urgente.</p>
+                </div>
+
+                <!-- Filter Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- 15 dias - Ativos -->
+                    <div
+                        class="filter-card cursor-pointer bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-green-500 p-6 transition-all"
+                        data-days="15"
+                        onclick="selectFilter(15)"
+                    >
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                                <i class="bi bi-clock text-green-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Ultimos 15 dias</h3>
+                                <p class="text-green-600 text-sm font-medium">Clientes ativos</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-gray-500 text-sm">Clientes com atualizacao recente</p>
+                        </div>
+                    </div>
+
+                    <!-- 45 dias - Atencao -->
+                    <div
+                        class="filter-card cursor-pointer bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-yellow-500 p-6 transition-all"
+                        data-days="45"
+                        onclick="selectFilter(45)"
+                    >
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                <i class="bi bi-clock-history text-yellow-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Ultimos 45 dias</h3>
+                                <p class="text-yellow-600 text-sm font-medium">Atencao</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-gray-500 text-sm">Clientes que precisam de atencao</p>
+                        </div>
+                    </div>
+
+                    <!-- 90 dias - Urgente -->
+                    <div
+                        class="filter-card cursor-pointer bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-red-500 p-6 transition-all"
+                        data-days="90"
+                        onclick="selectFilter(90)"
+                    >
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
+                                <i class="bi bi-clock-fill text-red-600 text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Ultimos 90 dias</h3>
+                                <p class="text-red-600 text-sm font-medium">Urgente</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <p class="text-gray-500 text-sm">Clientes que precisam de contato urgente</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-gray-800">Clientes Filtrados</h2>
+                        <div class="flex items-center gap-4">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    id="selectAll"
+                                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                    onchange="toggleSelectAll()"
+                                >
+                                <span class="text-sm text-gray-600">Selecionar todos</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Selecionar
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        CNPJ
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nome da Empresa
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Qtd Pecas
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ultimo Update
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Dias
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientsTable" class="bg-white divide-y divide-gray-200">
+                                <!-- Rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden px-6 py-12 text-center">
+                        <i class="bi bi-inbox text-gray-300 text-5xl mb-4"></i>
+                        <p class="text-gray-500">Selecione um filtro para visualizar os clientes</p>
+                    </div>
+                </div>
+
+                <!-- Selection Summary -->
+                <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-people text-blue-600 text-lg"></i>
+                            </div>
+                            <div>
+                                <p class="text-blue-800 font-medium">Resumo da Selecao</p>
+                                <p id="selectionSummary" class="text-blue-600 text-sm">0 clientes selecionados para envio</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex items-center justify-between">
+                    <a
+                        href="grouping.html"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                    >
+                        <i class="bi bi-arrow-left"></i>
+                        Voltar
+                    </a>
+
+                    <button
+                        id="nextButton"
+                        onclick="goToNext()"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        Avancar para Selecao
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Shared JavaScript -->
+    <script src="shared.js"></script>
+
+    <!-- Page-specific JavaScript -->
+    <script>
+        // State
+        let currentFilter = 15;
+        let clients = [];
+        let selectedCNPJs = [];
+        let filteredClients = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load data from storage or use mock data
+            loadClients();
+
+            // Load saved filter and selections
+            currentFilter = StateManager.getFilter();
+            selectedCNPJs = StateManager.getSelectedCNPJs();
+
+            // Apply initial filter
+            selectFilter(currentFilter);
+        });
+
+        // Load clients from storage or mock data
+        function loadClients() {
+            const uploadedData = StateManager.getUploadedData();
+
+            if (uploadedData && uploadedData.length > 0) {
+                clients = uploadedData;
+            } else {
+                clients = MOCK_DATA;
+            }
+        }
+
+        // Select a filter
+        function selectFilter(days) {
+            currentFilter = days;
+            StateManager.setFilter(days);
+
+            // Update card styles
+            document.querySelectorAll('.filter-card').forEach(card => {
+                const cardDays = parseInt(card.dataset.days, 10);
+                card.classList.remove('border-green-500', 'border-yellow-500', 'border-red-500', 'bg-green-50', 'bg-yellow-50', 'bg-red-50');
+
+                if (cardDays === days) {
+                    if (days === 15) {
+                        card.classList.add('border-green-500', 'bg-green-50');
+                    } else if (days === 45) {
+                        card.classList.add('border-yellow-500', 'bg-yellow-50');
+                    } else if (days === 90) {
+                        card.classList.add('border-red-500', 'bg-red-50');
+                    }
+                }
+            });
+
+            // Filter clients
+            filterClients();
+        }
+
+        // Filter clients based on selected days
+        function filterClients() {
+            const today = new Date();
+
+            filteredClients = clients.filter(client => {
+                const lastUpdate = new Date(client.lastUpdate);
+                const diffTime = Math.abs(today - lastUpdate);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays <= currentFilter;
+            });
+
+            // Sort by days since update (descending - most urgent first)
+            filteredClients.sort((a, b) => {
+                const daysA = daysSince(a.lastUpdate);
+                const daysB = daysSince(b.lastUpdate);
+                return daysB - daysA;
+            });
+
+            renderTable();
+            updateSummary();
+        }
+
+        // Render the clients table
+        function renderTable() {
+            const tableBody = document.getElementById('clientsTable');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filteredClients.length === 0) {
+                tableBody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            tableBody.innerHTML = filteredClients.map(client => {
+                const days = daysSince(client.lastUpdate);
+                const isSelected = selectedCNPJs.includes(client.cnpj);
+                const rowClass = getRowClass(days);
+
+                return `
+                    <tr class="${rowClass} hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <input
+                                type="checkbox"
+                                class="client-checkbox w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                data-cnpj="${client.cnpj}"
+                                ${isSelected ? 'checked' : ''}
+                                onchange="toggleClientSelection('${client.cnpj}')"
+                            >
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${formatCNPJ(client.cnpj)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${client.companyName}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                ${client.serialNumbers.length} pecas
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${formatDate(client.lastUpdate)}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDaysBadgeClass(days)}">
+                                ${days} dias
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateSelectAllCheckbox();
+        }
+
+        // Get row background class based on days
+        function getRowClass(days) {
+            if (days <= 15) return '';
+            if (days <= 45) return '';
+            return '';
+        }
+
+        // Get badge class based on days
+        function getDaysBadgeClass(days) {
+            if (days <= 15) {
+                return 'bg-green-100 text-green-800';
+            } else if (days <= 45) {
+                return 'bg-yellow-100 text-yellow-800';
+            } else {
+                return 'bg-red-100 text-red-800';
+            }
+        }
+
+        // Toggle client selection
+        function toggleClientSelection(cnpj) {
+            const index = selectedCNPJs.indexOf(cnpj);
+
+            if (index === -1) {
+                selectedCNPJs.push(cnpj);
+            } else {
+                selectedCNPJs.splice(index, 1);
+            }
+
+            StateManager.setSelectedCNPJs(selectedCNPJs);
+            updateSelectAllCheckbox();
+            updateSummary();
+        }
+
+        // Toggle select all
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+
+            if (selectAllCheckbox.checked) {
+                // Select all filtered clients
+                selectedCNPJs = filteredClients.map(client => client.cnpj);
+            } else {
+                // Deselect all
+                selectedCNPJs = [];
+            }
+
+            StateManager.setSelectedCNPJs(selectedCNPJs);
+
+            // Update all checkboxes
+            document.querySelectorAll('.client-checkbox').forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+
+            updateSummary();
+        }
+
+        // Update select all checkbox state
+        function updateSelectAllCheckbox() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const allSelected = filteredClients.length > 0 &&
+                filteredClients.every(client => selectedCNPJs.includes(client.cnpj));
+
+            selectAllCheckbox.checked = allSelected;
+        }
+
+        // Update selection summary
+        function updateSummary() {
+            const summaryElement = document.getElementById('selectionSummary');
+            const nextButton = document.getElementById('nextButton');
+            const count = selectedCNPJs.length;
+
+            summaryElement.textContent = `${count} cliente${count !== 1 ? 's' : ''} selecionado${count !== 1 ? 's' : ''} para envio`;
+
+            // Enable/disable next button
+            nextButton.disabled = count === 0;
+        }
+
+        // Go to next page
+        function goToNext() {
+            if (selectedCNPJs.length === 0) {
+                showToast('Selecione pelo menos um cliente para continuar', 'warning');
+                return;
+            }
+
+            // Save selections and navigate
+            StateManager.setSelectedCNPJs(selectedCNPJs);
+            StateManager.setFilter(currentFilter);
+
+            window.location.href = 'recipients.html';
+        }
+    </script>
+</body>
+</html>

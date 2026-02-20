@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="home.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Fluxo de Envio Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fluxo de Envio</span>
+                    </li>
+
+                    <!-- Inicio -->
+                    <li>
+                        <a href="home.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                            <i class="bi bi-house text-lg"></i>
+                            <span class="font-medium">Inicio</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload CSV -->
+                    <li>
+                        <a href="upload.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-cloud-upload text-lg"></i>
+                            <span>Upload CSV</span>
+                        </a>
+                    </li>
+
+                    <!-- Agrupamento -->
+                    <li>
+                        <a href="grouping.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-collection text-lg"></i>
+                            <span>Agrupamento</span>
+                        </a>
+                    </li>
+
+                    <!-- Filtros -->
+                    <li>
+                        <a href="filter.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-funnel text-lg"></i>
+                            <span>Filtros</span>
+                        </a>
+                    </li>
+
+                    <!-- Selecao -->
+                    <li>
+                        <a href="recipients.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-people text-lg"></i>
+                            <span>Selecao</span>
+                        </a>
+                    </li>
+
+                    <!-- Envio -->
+                    <li>
+                        <a href="send.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-send text-lg"></i>
+                            <span>Envio</span>
+                        </a>
+                    </li>
+
+                    <!-- Configuracoes Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuracoes</span>
+                    </li>
+
+                    <!-- Configuracoes -->
+                    <li>
+                        <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Configuracoes</span>
+                        </a>
+                    </li>
+
+                    <!-- Ajuda -->
+                    <li>
+                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Ajuda</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                    >
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Welcome Section -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Bem-vindo ao Email Engine</h1>
+                    <p class="text-gray-600 mt-2">Sistema de envio de emails para clientes baseado em dados de equipamentos.</p>
+                </div>
+
+                <!-- Quick Start Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Card 1: Iniciar Novo Processo -->
+                    <a href="upload.html" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow border border-gray-100 group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                                <i class="bi bi-play-circle text-2xl text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Iniciar Novo Processo</h3>
+                                <p class="text-sm text-gray-500">Comece um novo envio de emails</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Card 2: Ver Processos Anteriores -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow border border-gray-100 group cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                                <i class="bi bi-clock-history text-2xl text-green-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Ver Processos Anteriores</h3>
+                                <p class="text-sm text-gray-500">Historico de envios realizados</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Configuracoes -->
+                    <a href="settings.html" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow border border-gray-100 group">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                                <i class="bi bi-gear text-2xl text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Configuracoes</h3>
+                                <p class="text-sm text-gray-500">Ajustes do sistema</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- System Summary -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Resumo do Sistema</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Total de Clientes -->
+                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-people-fill text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Total de Clientes</p>
+                                <p class="text-2xl font-bold text-gray-800" id="totalClientes">---</p>
+                            </div>
+                        </div>
+
+                        <!-- Ultimo Processamento -->
+                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-calendar-check text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Ultimo Processamento</p>
+                                <p class="text-2xl font-bold text-gray-800" id="ultimoProcessamento">---</p>
+                            </div>
+                        </div>
+
+                        <!-- Status de Envio -->
+                        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                            <div class="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-send-check text-xl text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Status de Envio</p>
+                                <p class="text-lg font-bold text-gray-800" id="statusEnvio">Nenhum envio em andamento</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workflow Steps -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-6">Fluxo de Uso</h2>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <!-- Step 1: Upload -->
+                        <div class="flex-1 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="bi bi-cloud-upload text-2xl text-blue-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">1. Upload CSV</span>
+                            <p class="text-xs text-gray-500 mt-1">Importe seus dados</p>
+                        </div>
+
+                        <!-- Arrow -->
+                        <i class="bi bi-arrow-right text-2xl text-gray-300 hidden md:block"></i>
+                        <i class="bi bi-arrow-down text-2xl text-gray-300 md:hidden"></i>
+
+                        <!-- Step 2: Agrupamento -->
+                        <div class="flex-1 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="bi bi-collection text-2xl text-green-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">2. Agrupamento</span>
+                            <p class="text-xs text-gray-500 mt-1">Organize os dados</p>
+                        </div>
+
+                        <!-- Arrow -->
+                        <i class="bi bi-arrow-right text-2xl text-gray-300 hidden md:block"></i>
+                        <i class="bi bi-arrow-down text-2xl text-gray-300 md:hidden"></i>
+
+                        <!-- Step 3: Filtros -->
+                        <div class="flex-1 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="bi bi-funnel text-2xl text-yellow-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">3. Filtros</span>
+                            <p class="text-xs text-gray-500 mt-1">Aplique criterios</p>
+                        </div>
+
+                        <!-- Arrow -->
+                        <i class="bi bi-arrow-right text-2xl text-gray-300 hidden md:block"></i>
+                        <i class="bi bi-arrow-down text-2xl text-gray-300 md:hidden"></i>
+
+                        <!-- Step 4: Selecao -->
+                        <div class="flex-1 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="bi bi-people text-2xl text-purple-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">4. Selecao</span>
+                            <p class="text-xs text-gray-500 mt-1">Escolha destinatarios</p>
+                        </div>
+
+                        <!-- Arrow -->
+                        <i class="bi bi-arrow-right text-2xl text-gray-300 hidden md:block"></i>
+                        <i class="bi bi-arrow-down text-2xl text-gray-300 md:hidden"></i>
+
+                        <!-- Step 5: Envio -->
+                        <div class="flex-1 flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="bi bi-send text-2xl text-red-600"></i>
+                            </div>
+                            <span class="font-medium text-gray-800">5. Envio</span>
+                            <p class="text-xs text-gray-500 mt-1">Envie os emails</p>
+                        </div>
+                    </div>
+
+                    <!-- Main CTA Button -->
+                    <div class="mt-8 text-center">
+                        <a href="upload.html" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors shadow-lg shadow-blue-200">
+                            <i class="bi bi-rocket-takeoff text-lg"></i>
+                            Comecar Agora
+                        </a>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+</body>
+</html>

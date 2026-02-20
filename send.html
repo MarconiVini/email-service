@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envio de Emails - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+        /* Log scrollbar */
+        .log-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .log-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .log-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Menu Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Menu</span>
+                    </li>
+
+                    <!-- Home -->
+                    <li>
+                        <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house-door text-lg"></i>
+                            <span class="font-medium">Home</span>
+                        </a>
+                    </li>
+
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-grid-1x2 text-lg"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Analytics -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+
+                    <!-- Campaigns -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-megaphone text-lg"></i>
+                            <span>Campaigns</span>
+                        </a>
+                    </li>
+
+                    <!-- Templates Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Templates</span>
+                    </li>
+
+                    <!-- Email Templates -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Email Templates</span>
+                        </a>
+                    </li>
+
+                    <!-- Layouts -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-layout-text-window text-lg"></i>
+                            <span>Layouts</span>
+                        </a>
+                    </li>
+
+                    <!-- Settings Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">Settings</span>
+                    </li>
+
+                    <!-- Settings -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+
+                    <!-- Help -->
+                    <li>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Search -->
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                    >
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Breadcrumb -->
+                <div class="mb-6">
+                    <nav class="flex items-center gap-2 text-sm text-gray-500">
+                        <a href="index.html" class="hover:text-blue-600 transition-colors">Home</a>
+                        <i class="bi bi-chevron-right text-xs"></i>
+                        <span class="text-gray-700 font-medium">Etapa 5 de 5: Envio</span>
+                    </nav>
+                </div>
+
+                <!-- Page Title -->
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Envio de Emails</h1>
+                    <p class="text-gray-600 mt-1">Acompanhe o progresso do envio dos emails em tempo real.</p>
+                </div>
+
+                <!-- Global Status Area -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-800">Progresso do Envio</h2>
+                            <p class="text-sm text-gray-500" id="status-text">Aguardando inicio...</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-bold text-blue-600" id="progress-percent">0%</span>
+                            <p class="text-sm text-gray-500">
+                                <span id="sent-count">0</span> / <span id="total-count">0</span> enviados
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                        <div id="progress-bar" class="bg-blue-500 h-4 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <!-- Success Card -->
+                    <div class="bg-white rounded-xl shadow-sm p-5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-check-circle text-green-500 text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Sucessos</p>
+                                <p class="text-2xl font-bold text-green-600" id="success-count">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error Card -->
+                    <div class="bg-white rounded-xl shadow-sm p-5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-x-circle text-red-500 text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Erros</p>
+                                <p class="text-2xl font-bold text-red-600" id="error-count">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Card -->
+                    <div class="bg-white rounded-xl shadow-sm p-5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-clock text-yellow-500 text-2xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Pendentes</p>
+                                <p class="text-2xl font-bold text-yellow-600" id="pending-count">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Log -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800">Log de Envio em Tempo Real</h2>
+                        <span class="text-sm text-gray-500" id="log-count">0 registros</span>
+                    </div>
+                    <div id="log-container" class="log-container h-64 overflow-y-auto bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <p class="text-gray-400 text-center py-8" id="log-placeholder">Aguardando envio...</p>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex flex-wrap items-center gap-4">
+                    <!-- Pause/Continue Button -->
+                    <button id="btn-pause" class="flex items-center gap-2 px-6 py-3 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="bi bi-pause-fill text-lg"></i>
+                        <span>Pausar</span>
+                    </button>
+
+                    <!-- Cancel Button -->
+                    <button id="btn-cancel" class="flex items-center gap-2 px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="bi bi-x-circle text-lg"></i>
+                        <span>Cancelar Envio</span>
+                    </button>
+
+                    <!-- New Send Button (hidden initially) -->
+                    <button id="btn-new-send" class="hidden flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors">
+                        <i class="bi bi-arrow-repeat text-lg"></i>
+                        <span>Novo Envio</span>
+                    </button>
+
+                    <!-- Back to Start Button -->
+                    <a href="upload.html" id="btn-back" class="flex items-center gap-2 px-6 py-3 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors">
+                        <i class="bi bi-house text-lg"></i>
+                        <span>Voltar ao Inicio</span>
+                    </a>
+
+                    <!-- New Process Button (hidden initially, shown on completion) -->
+                    <a href="upload.html" id="btn-new-process" class="hidden flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                        <i class="bi bi-plus-circle text-lg"></i>
+                        <span>Novo Processo</span>
+                    </a>
+                </div>
+
+                <!-- Final Summary (hidden initially) -->
+                <div id="final-summary" class="hidden mt-6 bg-green-50 border border-green-200 rounded-xl p-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-check-lg text-green-500 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-green-800">Envio Concluido!</h3>
+                            <p class="text-green-700 mt-1" id="final-summary-text">Todos os emails foram processados.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="cancel-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 max-w-md mx-4 shadow-xl">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <i class="bi bi-exclamation-triangle text-red-500 text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Cancelar Envio?</h3>
+                    <p class="text-gray-600 text-sm">Esta acao nao pode ser desfeita.</p>
+                </div>
+            </div>
+            <p class="text-gray-600 mb-6">Tem certeza que deseja cancelar o envio de emails? Os emails ja enviados nao serao afetados.</p>
+            <div class="flex justify-end gap-3">
+                <button id="btn-modal-cancel" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    Voltar
+                </button>
+                <button id="btn-modal-confirm" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                    Confirmar Cancelamento
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shared JavaScript -->
+    <script src="shared.js"></script>
+
+    <!-- Page-specific JavaScript -->
+    <script>
+        // ============================================
+        // STATE VARIABLES
+        // ============================================
+        let recipients = [];
+        let isPaused = false;
+        let isCancelled = false;
+        let isCompleted = false;
+        let currentSimulation = null;
+        let logEntries = [];
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const statusText = document.getElementById('status-text');
+        const sentCount = document.getElementById('sent-count');
+        const totalCount = document.getElementById('total-count');
+        const successCount = document.getElementById('success-count');
+        const errorCount = document.getElementById('error-count');
+        const pendingCount = document.getElementById('pending-count');
+        const logContainer = document.getElementById('log-container');
+        const logPlaceholder = document.getElementById('log-placeholder');
+        const logCountText = document.getElementById('log-count');
+        const btnPause = document.getElementById('btn-pause');
+        const btnCancel = document.getElementById('btn-cancel');
+        const btnNewSend = document.getElementById('btn-new-send');
+        const btnBack = document.getElementById('btn-back');
+        const btnNewProcess = document.getElementById('btn-new-process');
+        const finalSummary = document.getElementById('final-summary');
+        const finalSummaryText = document.getElementById('final-summary-text');
+        const cancelModal = document.getElementById('cancel-modal');
+        const btnModalCancel = document.getElementById('btn-modal-cancel');
+        const btnModalConfirm = document.getElementById('btn-modal-confirm');
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        /**
+         * Format current time to HH:MM:SS
+         */
+        function formatTime(date) {
+            const d = date || new Date();
+            return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        /**
+         * Add entry to log
+         */
+        function addLogEntry(email, status, message) {
+            // Remove placeholder if present
+            if (logPlaceholder) {
+                logPlaceholder.remove();
+            }
+
+            const entry = {
+                timestamp: formatTime(),
+                email: email,
+                status: status,
+                message: message
+            };
+            logEntries.push(entry);
+
+            const statusClass = status === 'success' ? 'text-green-600' : 'text-red-600';
+            const statusIcon = status === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
+            const bgClass = status === 'success' ? 'bg-green-50' : 'bg-red-50';
+
+            const logItem = document.createElement('div');
+            logItem.className = `flex items-start gap-3 py-2 px-3 rounded-lg ${bgClass} mb-2`;
+            logItem.innerHTML = `
+                <span class="text-gray-400 text-sm font-mono whitespace-nowrap">${entry.timestamp}</span>
+                <i class="bi ${statusIcon} ${statusClass} mt-0.5"></i>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-700 truncate">${entry.email}</p>
+                    <p class="text-xs ${statusClass}">${entry.message}</p>
+                </div>
+            `;
+
+            logContainer.appendChild(logItem);
+
+            // Auto-scroll to bottom
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Update log count
+            logCountText.textContent = `${logEntries.length} registros`;
+        }
+
+        /**
+         * Update progress display
+         */
+        function updateProgress(percent, sent, total, success, failed) {
+            progressBar.style.width = `${percent}%`;
+            progressPercent.textContent = `${percent}%`;
+            sentCount.textContent = sent;
+            totalCount.textContent = total;
+            successCount.textContent = success;
+            errorCount.textContent = failed;
+            pendingCount.textContent = Math.max(0, total - sent);
+        }
+
+        /**
+         * Set status text with appropriate styling
+         */
+        function setStatus(text, type = 'default') {
+            statusText.textContent = text;
+            statusText.className = 'text-sm ';
+            switch (type) {
+                case 'success':
+                    statusText.className += 'text-green-600 font-medium';
+                    break;
+                case 'error':
+                    statusText.className += 'text-red-600 font-medium';
+                    break;
+                case 'warning':
+                    statusText.className += 'text-yellow-600 font-medium';
+                    break;
+                default:
+                    statusText.className += 'text-gray-500';
+            }
+        }
+
+        /**
+         * Start email sending process
+         */
+        function startSending() {
+            if (recipients.length === 0) {
+                setStatus('Nenhum destinatario selecionado', 'error');
+                showToast('Nenhum destinatario para enviar', 'warning');
+                return;
+            }
+
+            isPaused = false;
+            isCancelled = false;
+            isCompleted = false;
+
+            // Update UI
+            btnPause.disabled = false;
+            btnCancel.disabled = false;
+            btnPause.innerHTML = '<i class="bi bi-pause-fill text-lg"></i><span>Pausar</span>';
+            btnPause.className = 'flex items-center gap-2 px-6 py-3 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+
+            setStatus('Iniciando envio de emails...', 'default');
+
+            // Start simulation
+            currentSimulation = simulateEmailSending(recipients, (progress, status, currentRecipient, stats) => {
+                // Check if cancelled
+                if (isCancelled) {
+                    return;
+                }
+
+                // Check if paused
+                if (isPaused) {
+                    return;
+                }
+
+                // Update progress
+                updateProgress(progress, stats.sent + stats.failed, stats.total, stats.sent, stats.failed);
+
+                // Add log entry if we have a recipient
+                if (currentRecipient) {
+                    const isSuccess = status.includes('enviado');
+                    addLogEntry(
+                        currentRecipient.email || currentRecipient.companyName,
+                        isSuccess ? 'success' : 'error',
+                        status
+                    );
+                }
+
+                // Update status
+                if (progress < 100) {
+                    setStatus('Em andamento...', 'default');
+                } else {
+                    // Completed
+                    isCompleted = true;
+                    setStatus('Concluido', 'success');
+                    showCompletionUI(stats);
+                }
+            });
+        }
+
+        /**
+         * Pause/Resume sending
+         */
+        function togglePause() {
+            if (isCompleted || isCancelled) return;
+
+            isPaused = !isPaused;
+
+            if (isPaused) {
+                btnPause.innerHTML = '<i class="bi bi-play-fill text-lg"></i><span>Continuar</span>';
+                btnPause.className = 'flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+                setStatus('Pausado', 'warning');
+            } else {
+                btnPause.innerHTML = '<i class="bi bi-pause-fill text-lg"></i><span>Pausar</span>';
+                btnPause.className = 'flex items-center gap-2 px-6 py-3 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+                setStatus('Em andamento...', 'default');
+
+                // Resume sending - restart the simulation
+                resumeSending();
+            }
+        }
+
+        /**
+         * Resume sending after pause
+         */
+        function resumeSending() {
+            // Calculate how many have been processed
+            const processed = parseInt(sentCount.textContent) + parseInt(errorCount.textContent);
+            const remaining = recipients.slice(processed);
+
+            if (remaining.length === 0) {
+                isCompleted = true;
+                setStatus('Concluido', 'success');
+                showCompletionUI({
+                    sent: parseInt(successCount.textContent),
+                    failed: parseInt(errorCount.textContent),
+                    total: parseInt(totalCount.textContent)
+                });
+                return;
+            }
+
+            simulateEmailSending(remaining, (progress, status, currentRecipient, stats) => {
+                if (isCancelled || isPaused) {
+                    return;
+                }
+
+                // Calculate overall progress
+                const overallProgress = Math.round(((processed + stats.sent + stats.failed) / parseInt(totalCount.textContent)) * 100);
+
+                updateProgress(
+                    overallProgress,
+                    processed + stats.sent + stats.failed,
+                    parseInt(totalCount.textContent),
+                    parseInt(successCount.textContent) + stats.sent,
+                    parseInt(errorCount.textContent) + stats.failed
+                );
+
+                if (currentRecipient) {
+                    const isSuccess = status.includes('enviado');
+                    addLogEntry(
+                        currentRecipient.email || currentRecipient.companyName,
+                        isSuccess ? 'success' : 'error',
+                        status
+                    );
+                }
+
+                if (overallProgress >= 100) {
+                    isCompleted = true;
+                    setStatus('Concluido', 'success');
+                    showCompletionUI({
+                        sent: parseInt(successCount.textContent),
+                        failed: parseInt(errorCount.textContent),
+                        total: parseInt(totalCount.textContent)
+                    });
+                }
+            });
+        }
+
+        /**
+         * Cancel sending
+         */
+        function cancelSending() {
+            isCancelled = true;
+            setStatus('Cancelado', 'error');
+
+            // Update UI
+            btnPause.disabled = true;
+            btnCancel.disabled = true;
+            btnNewSend.classList.remove('hidden');
+
+            addLogEntry('Sistema', 'error', 'Envio cancelado pelo usuario');
+            showToast('Envio cancelado', 'warning');
+
+            // Hide modal
+            cancelModal.classList.add('hidden');
+        }
+
+        /**
+         * Show completion UI
+         */
+        function showCompletionUI(stats) {
+            // Show final summary
+            finalSummary.classList.remove('hidden');
+            finalSummaryText.textContent = `${stats.sent} emails enviados com sucesso, ${stats.failed} falhas de um total de ${stats.total} destinatarios.`;
+
+            // Update buttons
+            btnPause.disabled = true;
+            btnCancel.disabled = true;
+            btnNewSend.classList.remove('hidden');
+            btnNewProcess.classList.remove('hidden');
+
+            // Show success toast
+            if (stats.failed === 0) {
+                showToast('Todos os emails foram enviados com sucesso!', 'success');
+            } else {
+                showToast(`Envio concluido com ${stats.failed} falhas`, 'warning');
+            }
+        }
+
+        /**
+         * Reset state for new send
+         */
+        function resetForNewSend() {
+            isPaused = false;
+            isCancelled = false;
+            isCompleted = false;
+            logEntries = [];
+
+            // Reset UI
+            updateProgress(0, 0, recipients.length, 0, 0);
+            setStatus('Aguardando inicio...', 'default');
+
+            // Clear log
+            logContainer.innerHTML = '<p class="text-gray-400 text-center py-8" id="log-placeholder">Aguardando envio...</p>';
+            logCountText.textContent = '0 registros';
+
+            // Reset buttons
+            btnPause.disabled = false;
+            btnCancel.disabled = false;
+            btnPause.innerHTML = '<i class="bi bi-pause-fill text-lg"></i><span>Pausar</span>';
+            btnPause.className = 'flex items-center gap-2 px-6 py-3 bg-yellow-500 text-white rounded-lg font-medium hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
+
+            // Hide completion UI
+            finalSummary.classList.add('hidden');
+            btnNewSend.classList.add('hidden');
+            btnNewProcess.classList.add('hidden');
+
+            // Start sending again
+            startSending();
+        }
+
+        /**
+         * Show cancel confirmation modal
+         */
+        function showCancelModal() {
+            cancelModal.classList.remove('hidden');
+        }
+
+        /**
+         * Hide cancel confirmation modal
+         */
+        function hideCancelModal() {
+            cancelModal.classList.add('hidden');
+        }
+
+        /**
+         * Load recipients from state
+         */
+        function loadRecipients() {
+            // Get selected CNPJs
+            const selectedCNPJs = StateManager.getSelectedCNPJs();
+
+            if (selectedCNPJs.length === 0) {
+                // If no selected CNPJs, check for uploaded data
+                const uploadedData = StateManager.getUploadedData();
+
+                if (uploadedData.length > 0) {
+                    recipients = uploadedData;
+                } else {
+                    // Use mock data as fallback
+                    recipients = MOCK_DATA;
+                    showToast('Usando dados de demonstracao', 'info');
+                }
+            } else {
+                // Filter mock data by selected CNPJs
+                recipients = MOCK_DATA.filter(item => selectedCNPJs.includes(item.cnpj));
+
+                if (recipients.length === 0) {
+                    recipients = MOCK_DATA;
+                    showToast('Usando dados de demonstracao', 'info');
+                }
+            }
+
+            // Update total count
+            totalCount.textContent = recipients.length;
+            pendingCount.textContent = recipients.length;
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        btnPause.addEventListener('click', togglePause);
+        btnCancel.addEventListener('click', showCancelModal);
+        btnNewSend.addEventListener('click', resetForNewSend);
+        btnModalCancel.addEventListener('click', hideCancelModal);
+        btnModalConfirm.addEventListener('click', cancelSending);
+
+        // Close modal on background click
+        cancelModal.addEventListener('click', (e) => {
+            if (e.target === cancelModal) {
+                hideCancelModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !cancelModal.classList.contains('hidden')) {
+                hideCancelModal();
+            }
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRecipients();
+
+            // Auto-start sending after a short delay
+            setTimeout(() => {
+                startSending();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
