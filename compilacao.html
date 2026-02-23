@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compilacao - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                        'michelin-blue': '#0047AB',
+                        'michelin-orange': '#FF6600',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+        /* Responsive Sidebar */
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                position: fixed;
+                left: -256px;
+                top: 0;
+                height: 100vh;
+                z-index: 50;
+                transition: left 0.3s ease-in-out;
+            }
+            .sidebar-mobile.sidebar-open {
+                left: 0;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+        /* KPI Card hover effect */
+        .kpi-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        /* Table styling */
+        .data-table th {
+            background-color: #0047AB;
+            color: white;
+        }
+        .data-table tbody tr:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 sidebar-mobile">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Fluxo de Envio Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fluxo de Envio</span>
+                    </li>
+
+                    <!-- Inicio -->
+                    <li>
+                        <a href="home.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house text-lg"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload CSV -->
+                    <li>
+                        <a href="upload.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-cloud-upload text-lg"></i>
+                            <span>Upload CSV</span>
+                        </a>
+                    </li>
+
+                    <!-- Agrupamento -->
+                    <li>
+                        <a href="grouping.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-collection text-lg"></i>
+                            <span>Agrupamento</span>
+                        </a>
+                    </li>
+
+                    <!-- Filtros -->
+                    <li>
+                        <a href="filter.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-funnel text-lg"></i>
+                            <span>Filtros</span>
+                        </a>
+                    </li>
+
+                    <!-- Selecao -->
+                    <li>
+                        <a href="recipients.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-people text-lg"></i>
+                            <span>Selecao</span>
+                        </a>
+                    </li>
+
+                    <!-- Envio -->
+                    <li>
+                        <a href="send.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-send text-lg"></i>
+                            <span>Envio</span>
+                        </a>
+                    </li>
+
+                    <!-- Compilacao -->
+                    <li>
+                        <a href="compilacao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span class="font-medium">Compilacao</span>
+                        </a>
+                    </li>
+
+                    <!-- Graficos -->
+                    <li>
+                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-graph-up text-lg"></i>
+                            <span>Graficos</span>
+                        </a>
+                    </li>
+
+                    <!-- Posicao -->
+                    <li>
+                        <a href="posicao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-box-seam text-lg"></i>
+                            <span>Posicao</span>
+                        </a>
+                    </li>
+
+                    <!-- Configuracoes Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuracoes</span>
+                    </li>
+
+                    <!-- Configuracoes -->
+                    <li>
+                        <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Configuracoes</span>
+                        </a>
+                    </li>
+
+                    <!-- Contrato -->
+                    <li>
+                        <a href="contract.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Contrato</span>
+                        </a>
+                    </li>
+
+                    <!-- Ajuda -->
+                    <li>
+                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Ajuda</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-michelin-blue shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Hamburger Menu Button (Mobile) -->
+                <button id="menu-toggle" class="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors mr-3">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+
+                <!-- Page Title -->
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-bar-chart-line text-white text-2xl"></i>
+                    <h1 class="text-xl font-semibold text-white">Dashboard de Compilacao</h1>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Last Update -->
+                    <div class="hidden md:flex items-center gap-2 text-white/80 text-sm">
+                        <i class="bi bi-clock"></i>
+                        <span id="last-update">Atualizado agora</span>
+                    </div>
+
+                    <!-- Refresh Button -->
+                    <button id="refresh-btn" class="p-2 text-white hover:bg-white/10 rounded-lg transition-colors" title="Atualizar dados">
+                        <i class="bi bi-arrow-clockwise text-xl"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <!-- No Data Message -->
+                <div id="no-data-message" class="hidden">
+                    <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+                        <i class="bi bi-inbox text-6xl text-gray-300 mb-4"></i>
+                        <h2 class="text-xl font-semibold text-gray-700 mb-2">Nenhum dado disponivel</h2>
+                        <p class="text-gray-500 mb-4">Facça upload de um arquivo CSV/XLS para visualizar os dados compilados.</p>
+                        <a href="upload.html" class="inline-flex items-center gap-2 px-4 py-2 bg-michelin-blue text-white rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="bi bi-cloud-upload"></i>
+                            <span>Ir para Upload</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div id="dashboard-content">
+                    <!-- KPIs Section -->
+                    <section class="mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Total KPI -->
+                            <div class="kpi-card bg-white rounded-xl shadow-sm p-6 border-l-4 border-michelin-blue">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">Total de Registros</p>
+                                        <p id="kpi-total" class="text-3xl font-bold text-gray-800 mt-1">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-michelin-blue/10 rounded-full flex items-center justify-center">
+                                        <i class="bi bi-database text-michelin-blue text-xl"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 0-90 Days KPI -->
+                            <div class="kpi-card bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">0-90 Dias</p>
+                                        <p id="kpi-0-90" class="text-3xl font-bold text-green-600 mt-1">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i class="bi bi-check-circle text-green-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <p id="kpi-0-90-pct" class="text-xs text-gray-400 mt-2">0% do total</p>
+                            </div>
+
+                            <!-- 91-180 Days KPI -->
+                            <div class="kpi-card bg-white rounded-xl shadow-sm p-6 border-l-4 border-yellow-500">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">91-180 Dias</p>
+                                        <p id="kpi-91-180" class="text-3xl font-bold text-yellow-600 mt-1">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                                        <i class="bi bi-exclamation-triangle text-yellow-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <p id="kpi-91-180-pct" class="text-xs text-gray-400 mt-2">0% do total</p>
+                            </div>
+
+                            <!-- Above 181 Days KPI -->
+                            <div class="kpi-card bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500 font-medium">Acima de 181 Dias</p>
+                                        <p id="kpi-above-181" class="text-3xl font-bold text-red-600 mt-1">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                        <i class="bi bi-x-circle text-red-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <p id="kpi-above-181-pct" class="text-xs text-gray-400 mt-2">0% do total</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Chart Section -->
+                    <section class="mb-6">
+                        <div class="bg-white rounded-xl shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-semibold text-gray-800">Distribuicao por Periodo (Aging)</h2>
+                                <div class="flex items-center gap-2">
+                                    <span class="flex items-center gap-1 text-xs text-gray-500">
+                                        <span class="w-3 h-3 bg-green-500 rounded"></span> 0-90
+                                    </span>
+                                    <span class="flex items-center gap-1 text-xs text-gray-500">
+                                        <span class="w-3 h-3 bg-yellow-500 rounded"></span> 91-180
+                                    </span>
+                                    <span class="flex items-center gap-1 text-xs text-gray-500">
+                                        <span class="w-3 h-3 bg-red-500 rounded"></span> 181+
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="aging-chart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Detailed Table Section -->
+                    <section>
+                        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <h2 class="text-lg font-semibold text-gray-800">Detalhamento por Cliente</h2>
+                                    <div class="flex items-center gap-2">
+                                        <div class="relative">
+                                            <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                            <input
+                                                type="text"
+                                                id="table-search"
+                                                placeholder="Buscar cliente..."
+                                                class="pl-9 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-michelin-blue text-sm w-full sm:w-64"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="data-table w-full">
+                                    <thead>
+                                        <tr>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold">Empresa</th>
+                                            <th class="px-4 py-3 text-left text-sm font-semibold">CNPJ</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold">Total</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold bg-green-600">0-45d</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold bg-green-700">46-90d</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold bg-yellow-600">91-120d</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold bg-yellow-700">121-180d</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold bg-red-600">181+</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold">Ultima Atualizacao</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="data-table-body" class="divide-y divide-gray-100">
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="table-footer" class="p-4 border-t border-gray-100 bg-gray-50">
+                                <p class="text-sm text-gray-500 text-center">
+                                    Mostrando <span id="showing-count">0</span> registros
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Mobile Menu Script & Data Processing -->
+    <script src="shared.js"></script>
+    <script>
+        // ============================================
+        // MOBILE MENU FUNCTIONALITY
+        // ============================================
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('sidebar-open');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // ============================================
+        // KPI CALCULATION
+        // ============================================
+        function calculateKPIs(data) {
+            const today = new Date();
+            let total = data.length;
+            let range0to90 = 0;
+            let range91to180 = 0;
+            let rangeAbove181 = 0;
+
+            data.forEach(item => {
+                const lastUpdate = new Date(item.lastUpdate);
+                const daysDiff = Math.floor((today - lastUpdate) / (1000 * 60 * 60 * 24));
+
+                if (daysDiff <= 90) {
+                    range0to90++;
+                } else if (daysDiff <= 180) {
+                    range91to180++;
+                } else {
+                    rangeAbove181++;
+                }
+            });
+
+            return {
+                total,
+                range0to90,
+                range91to180,
+                rangeAbove181,
+                pct0to90: total > 0 ? ((range0to90 / total) * 100).toFixed(1) : 0,
+                pct91to180: total > 0 ? ((range91to180 / total) * 100).toFixed(1) : 0,
+                pctAbove181: total > 0 ? ((rangeAbove181 / total) * 100).toFixed(1) : 0
+            };
+        }
+
+        // ============================================
+        // RENDER KPIs
+        // ============================================
+        function renderKPIs(kpis) {
+            document.getElementById('kpi-total').textContent = kpis.total.toLocaleString('pt-BR');
+            document.getElementById('kpi-0-90').textContent = kpis.range0to90.toLocaleString('pt-BR');
+            document.getElementById('kpi-91-180').textContent = kpis.range91to180.toLocaleString('pt-BR');
+            document.getElementById('kpi-above-181').textContent = kpis.rangeAbove181.toLocaleString('pt-BR');
+
+            document.getElementById('kpi-0-90-pct').textContent = `${kpis.pct0to90}% do total`;
+            document.getElementById('kpi-91-180-pct').textContent = `${kpis.pct91to180}% do total`;
+            document.getElementById('kpi-above-181-pct').textContent = `${kpis.pctAbove181}% do total`;
+        }
+
+        // ============================================
+        // RENDER CHART
+        // ============================================
+        let agingChart = null;
+
+        function renderChart(kpis) {
+            const ctx = document.getElementById('aging-chart').getContext('2d');
+
+            if (agingChart) {
+                agingChart.destroy();
+            }
+
+            agingChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['0-90 Dias', '91-180 Dias', '181+ Dias'],
+                    datasets: [{
+                        label: 'Quantidade de Registros',
+                        data: [kpis.range0to90, kpis.range91to180, kpis.rangeAbove181],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(234, 179, 8, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(34, 197, 94)',
+                            'rgb(234, 179, 8)',
+                            'rgb(239, 68, 68)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1F2937',
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    const total = kpis.total;
+                                    const value = context.raw;
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${value} registros (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // RENDER TABLE
+        // ============================================
+        function calculateAgingBuckets(item) {
+            const today = new Date();
+            const lastUpdate = new Date(item.lastUpdate);
+            const daysDiff = Math.floor((today - lastUpdate) / (1000 * 60 * 60 * 24));
+
+            return {
+                days0to45: daysDiff <= 45 ? (item.serialNumbers?.length || 1) : 0,
+                days46to90: daysDiff > 45 && daysDiff <= 90 ? (item.serialNumbers?.length || 1) : 0,
+                days91to120: daysDiff > 90 && daysDiff <= 120 ? (item.serialNumbers?.length || 1) : 0,
+                days121to180: daysDiff > 120 && daysDiff <= 180 ? (item.serialNumbers?.length || 1) : 0,
+                daysAbove181: daysDiff > 180 ? (item.serialNumbers?.length || 1) : 0,
+                totalSerials: item.serialNumbers?.length || 1
+            };
+        }
+
+        function renderTable(data, searchTerm = '') {
+            const tbody = document.getElementById('data-table-body');
+            const showingCount = document.getElementById('showing-count');
+
+            // Filter data if search term provided
+            let filteredData = data;
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                filteredData = data.filter(item =>
+                    (item.companyName && item.companyName.toLowerCase().includes(term)) ||
+                    (item.cnpj && item.cnpj.toLowerCase().includes(term))
+                );
+            }
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                            <i class="bi bi-inbox text-3xl block mb-2"></i>
+                            Nenhum registro encontrado
+                        </td>
+                    </tr>
+                `;
+                showingCount.textContent = '0';
+                return;
+            }
+
+            tbody.innerHTML = filteredData.map(item => {
+                const buckets = calculateAgingBuckets(item);
+                const lastUpdateFormatted = formatDate(item.lastUpdate);
+
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="bi bi-building text-gray-500"></i>
+                                </div>
+                                <span class="font-medium text-gray-800 text-sm">${item.companyName || 'N/A'}</span>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm text-gray-600">${formatCNPJ(item.cnpj) || 'N/A'}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full font-semibold text-gray-800 text-sm">${buckets.totalSerials}</span>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            ${buckets.days0to45 > 0 ? `<span class="inline-flex items-center justify-center w-8 h-8 bg-green-100 rounded-full font-semibold text-green-700 text-sm">${buckets.days0to45}</span>` : '<span class="text-gray-300">-</span>'}
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            ${buckets.days46to90 > 0 ? `<span class="inline-flex items-center justify-center w-8 h-8 bg-green-100 rounded-full font-semibold text-green-700 text-sm">${buckets.days46to90}</span>` : '<span class="text-gray-300">-</span>'}
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            ${buckets.days91to120 > 0 ? `<span class="inline-flex items-center justify-center w-8 h-8 bg-yellow-100 rounded-full font-semibold text-yellow-700 text-sm">${buckets.days91to120}</span>` : '<span class="text-gray-300">-</span>'}
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            ${buckets.days121to180 > 0 ? `<span class="inline-flex items-center justify-center w-8 h-8 bg-yellow-100 rounded-full font-semibold text-yellow-700 text-sm">${buckets.days121to180}</span>` : '<span class="text-gray-300">-</span>'}
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            ${buckets.daysAbove181 > 0 ? `<span class="inline-flex items-center justify-center w-8 h-8 bg-red-100 rounded-full font-semibold text-red-700 text-sm">${buckets.daysAbove181}</span>` : '<span class="text-gray-300">-</span>'}
+                        </td>
+                        <td class="px-4 py-3 text-center text-sm text-gray-600">${lastUpdateFormatted}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            showingCount.textContent = filteredData.length.toLocaleString('pt-BR');
+        }
+
+        // ============================================
+        // INITIALIZE DASHBOARD
+        // ============================================
+        function initDashboard() {
+            console.log('initDashboard called');
+
+            // Get data from StateManager or use MOCK_DATA
+            let data = [];
+
+            try {
+                if (typeof StateManager !== 'undefined') {
+                    data = StateManager.getUploadedData();
+                    console.log('Data from StateManager:', data);
+                }
+            } catch (e) {
+                console.error('Error getting data from StateManager:', e);
+            }
+
+            // If no uploaded data, use mock data for demonstration
+            if (!data || data.length === 0) {
+                if (typeof MOCK_DATA !== 'undefined') {
+                    data = MOCK_DATA;
+                    console.log('Using MOCK_DATA:', data);
+                }
+            }
+
+            // If still no data, show no data message
+            if (!data || data.length === 0) {
+                console.log('No data available, showing no-data message');
+                document.getElementById('no-data-message').classList.remove('hidden');
+                document.getElementById('dashboard-content').classList.add('hidden');
+                return;
+            }
+
+            console.log('Rendering dashboard with', data.length, 'records');
+
+            // Show dashboard content
+            document.getElementById('no-data-message').classList.add('hidden');
+            document.getElementById('dashboard-content').classList.remove('hidden');
+
+            // Calculate and render KPIs
+            const kpis = calculateKPIs(data);
+            renderKPIs(kpis);
+
+            // Render chart
+            renderChart(kpis);
+
+            // Render table
+            renderTable(data);
+
+            // Update last update timestamp
+            document.getElementById('last-update').textContent = 'Atualizado agora';
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // Search functionality
+        document.getElementById('table-search').addEventListener('input', (e) => {
+            const data = StateManager.getUploadedData() || MOCK_DATA;
+            renderTable(data, e.target.value);
+        });
+
+        // Refresh button
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            initDashboard();
+            if (window.showToast) {
+                showToast('Dados atualizados com sucesso!', 'success');
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajuda - Email Engine</title>
+    <title>Graficos - Admin Dashboard</title>
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -72,7 +74,7 @@
         <aside id="sidebar" class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 sidebar-mobile">
             <!-- Logo -->
             <div class="h-16 flex items-center px-6 border-b border-gray-700">
-                <a href="home.html" class="flex items-center gap-2">
+                <a href="/" class="flex items-center gap-2">
                     <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
                         <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
                     </div>
@@ -144,11 +146,11 @@
                         </a>
                     </li>
 
-                    <!-- Graficos -->
+                    <!-- Graficos (ACTIVE) -->
                     <li>
-                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
                             <i class="bi bi-graph-up text-lg"></i>
-                            <span>Graficos</span>
+                            <span class="font-medium">Graficos</span>
                         </a>
                     </li>
 
@@ -183,9 +185,9 @@
 
                     <!-- Ajuda -->
                     <li>
-                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
                             <i class="bi bi-question-circle text-lg"></i>
-                            <span class="font-medium">Ajuda</span>
+                            <span>Ajuda</span>
                         </a>
                     </li>
                 </ul>
@@ -216,20 +218,19 @@
 
             <!-- Header -->
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Hamburger Menu Button (Mobile) -->
+                <button id="menu-toggle" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mr-3">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+
                 <!-- Search -->
-                <div class="flex items-center gap-4">
-                    <!-- Mobile Menu Toggle -->
-                    <button id="menu-toggle" onclick="toggleSidebar()" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                        <i class="bi bi-list text-2xl"></i>
-                    </button>
-                    <div class="relative">
+                <div class="relative flex-1 md:flex-none">
                     <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     <input
                         type="text"
-                        placeholder="Buscar..."
-                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                        placeholder="Search..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
                     >
-                    </div>
                 </div>
 
                 <!-- Right Actions -->
@@ -266,111 +267,61 @@
             <main class="flex-1 overflow-y-auto p-6">
                 <!-- Page Title -->
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800">Ajuda</h1>
-                    <p class="text-gray-600 mt-2">Encontre respostas para suas duvidas sobre o sistema.</p>
+                    <h1 class="text-3xl font-bold text-gray-800">Dashboard de Performance de Representantes</h1>
+                    <p class="text-gray-500 mt-2">Monitoramento automatico de saidas por produto e representante</p>
                 </div>
 
-                <!-- Help Sections -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Getting Started -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="bi bi-rocket-takeoff text-xl text-blue-600"></i>
-                            </div>
-                            <h2 class="text-lg font-semibold text-gray-800">Como Comecar</h2>
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Total de Saidas -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4">
+                        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-graph-up-arrow text-blue-500 text-2xl"></i>
                         </div>
-                        <ol class="space-y-3 text-gray-600">
-                            <li class="flex items-start gap-2">
-                                <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">1</span>
-                                <span>Faca o upload do arquivo CSV com os dados dos clientes</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">2</span>
-                                <span>Configure os agrupamentos desejados</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">3</span>
-                                <span>Aplique filtros para refinar a selecao</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">4</span>
-                                <span>Selecione os destinatarios finais</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">5</span>
-                                <span>Envie os emails</span>
-                            </li>
-                        </ol>
-                    </div>
-
-                    <!-- CSV Format -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                <i class="bi bi-file-earmark-spreadsheet text-xl text-green-600"></i>
-                            </div>
-                            <h2 class="text-lg font-semibold text-gray-800">Formato do CSV</h2>
-                        </div>
-                        <p class="text-gray-600 mb-4">O arquivo CSV deve conter as seguintes colunas:</p>
-                        <div class="bg-gray-50 rounded-lg p-4 font-mono text-sm text-gray-700">
-                            <p>nome, email, empresa, equipamento</p>
-                            <p>Joao Silva, joao@exemplo.com, Empresa A, Motor X</p>
-                            <p>Maria Santos, maria@exemplo.com, Empresa B, Bomba Y</p>
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Total de Saidas</p>
+                            <p class="text-3xl font-bold text-gray-800">1.240</p>
                         </div>
                     </div>
 
-                    <!-- FAQ -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                                <i class="bi bi-question-diamond text-xl text-yellow-600"></i>
-                            </div>
-                            <h2 class="text-lg font-semibold text-gray-800">Perguntas Frequentes</h2>
+                    <!-- Melhor Representante -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4">
+                        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-person-check text-green-500 text-2xl"></i>
                         </div>
-                        <div class="space-y-4">
-                            <details class="group">
-                                <summary class="flex items-center justify-between cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                                    <span class="font-medium text-gray-700">Como adiciono um novo template de email?</span>
-                                    <i class="bi bi-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                                </summary>
-                                <p class="p-3 text-gray-600">Em breve esta funcionalidade estara disponivel na secao de Configuracoes.</p>
-                            </details>
-                            <details class="group">
-                                <summary class="flex items-center justify-between cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                                    <span class="font-medium text-gray-700">Posso agendar envios?</span>
-                                    <i class="bi bi-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                                </summary>
-                                <p class="p-3 text-gray-600">Atualmente os envios sao feitos imediatamente. O agendamento sera implementado em uma versao futura.</p>
-                            </details>
-                            <details class="group">
-                                <summary class="flex items-center justify-between cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100">
-                                    <span class="font-medium text-gray-700">Qual o limite de emails por envio?</span>
-                                    <i class="bi bi-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
-                                </summary>
-                                <p class="p-3 text-gray-600">O limite depende das configuracoes do seu servidor SMTP. Consulte seu provedor de email.</p>
-                            </details>
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Melhor Representante</p>
+                            <p class="text-2xl font-bold text-gray-800">Carlos Silva</p>
                         </div>
                     </div>
 
-                    <!-- Contact Support -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                                <i class="bi bi-headset text-xl text-purple-600"></i>
-                            </div>
-                            <h2 class="text-lg font-semibold text-gray-800">Suporte</h2>
+                    <!-- Produto Mais Vendido -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4">
+                        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-box-seam text-purple-500 text-2xl"></i>
                         </div>
-                        <p class="text-gray-600 mb-4">Precisa de ajuda adicional? Entre em contato com nossa equipe de suporte.</p>
-                        <div class="space-y-3">
-                            <a href="mailto:suporte@emailengine.com" class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                <i class="bi bi-envelope text-blue-500"></i>
-                                <span class="text-gray-700">suporte@emailengine.com</span>
-                            </a>
-                            <a href="#" class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                <i class="bi bi-book text-green-500"></i>
-                                <span class="text-gray-700">Documentacao Completa</span>
-                            </a>
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Produto Mais Vendido</p>
+                            <p class="text-2xl font-bold text-gray-800">Smartphone X1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Bar Chart - Saidas por Representante -->
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Saidas por Representante</h2>
+                        <div class="relative h-80">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Donut Chart - Top 5 Produtos -->
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Top 5 Produtos</h2>
+                        <div class="relative h-80 flex items-center justify-center">
+                            <canvas id="donutChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -378,6 +329,115 @@
 
         </div>
     </div>
-    <script src="shared.js"></script>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('sidebar-open');
+            sidebarOverlay.classList.remove('active');
+        });
+    </script>
+
+    <!-- Chart.js Scripts -->
+    <script>
+        // Bar Chart - Saidas por Representante
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Carlos', 'Ana', 'Joao', 'Maria', 'Bruno'],
+                datasets: [{
+                    label: 'Saidas',
+                    data: [420, 350, 280, 200, 180],
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#E5E7EB'
+                        },
+                        ticks: {
+                            color: '#6B7280',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#6B7280',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Donut Chart - Top 5 Produtos
+        const donutCtx = document.getElementById('donutChart').getContext('2d');
+        const donutChart = new Chart(donutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Smartphone', 'Notebook', 'Tablet', 'Mouse', 'Camera'],
+                datasets: [{
+                    data: [40, 20, 15, 15, 10],
+                    backgroundColor: [
+                        '#10B981', // Verde
+                        '#3B82F6', // Azul
+                        '#8B5CF6', // Roxo
+                        '#F59E0B', // Laranja
+                        '#EF4444'  // Vermelho
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            color: '#374151',
+                            font: {
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

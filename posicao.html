@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posicao de Estoque - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+        /* Responsive Sidebar */
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                position: fixed;
+                left: -256px;
+                top: 0;
+                height: 100vh;
+                z-index: 50;
+                transition: left 0.3s ease-in-out;
+            }
+            .sidebar-mobile.sidebar-open {
+                left: 0;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+        /* KPI Card hover effect */
+        .kpi-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        /* Table styling */
+        .data-table th {
+            background-color: #1F2937;
+            color: white;
+        }
+        .data-table tbody tr:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 sidebar-mobile">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="/" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Fluxo de Envio Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fluxo de Envio</span>
+                    </li>
+
+                    <!-- Inicio -->
+                    <li>
+                        <a href="home.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house text-lg"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload CSV -->
+                    <li>
+                        <a href="upload.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-cloud-upload text-lg"></i>
+                            <span>Upload CSV</span>
+                        </a>
+                    </li>
+
+                    <!-- Agrupamento -->
+                    <li>
+                        <a href="grouping.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-collection text-lg"></i>
+                            <span>Agrupamento</span>
+                        </a>
+                    </li>
+
+                    <!-- Filtros -->
+                    <li>
+                        <a href="filter.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-funnel text-lg"></i>
+                            <span>Filtros</span>
+                        </a>
+                    </li>
+
+                    <!-- Selecao -->
+                    <li>
+                        <a href="recipients.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-people text-lg"></i>
+                            <span>Selecao</span>
+                        </a>
+                    </li>
+
+                    <!-- Envio -->
+                    <li>
+                        <a href="send.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-send text-lg"></i>
+                            <span>Envio</span>
+                        </a>
+                    </li>
+
+                    <!-- Compilacao -->
+                    <li>
+                        <a href="compilacao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span>Compilacao</span>
+                        </a>
+                    </li>
+
+                    <!-- Graficos -->
+                    <li>
+                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-graph-up text-lg"></i>
+                            <span>Graficos</span>
+                        </a>
+                    </li>
+
+                    <!-- Posicao (ACTIVE) -->
+                    <li>
+                        <a href="posicao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                            <i class="bi bi-box-seam text-lg"></i>
+                            <span class="font-medium">Posicao</span>
+                        </a>
+                    </li>
+
+                    <!-- Configuracoes Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuracoes</span>
+                    </li>
+
+                    <!-- Configuracoes -->
+                    <li>
+                        <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Configuracoes</span>
+                        </a>
+                    </li>
+
+                    <!-- Contrato -->
+                    <li>
+                        <a href="contract.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Contrato</span>
+                        </a>
+                    </li>
+
+                    <!-- Ajuda -->
+                    <li>
+                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Ajuda</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Hamburger Menu Button (Mobile) -->
+                <button id="menu-toggle" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors mr-3">
+                    <i class="bi bi-list text-2xl"></i>
+                </button>
+
+                <!-- Search -->
+                <div class="relative flex-1 md:flex-none">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
+                    >
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <!-- Page Title -->
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">Posicao de Estoque</h1>
+                    <p class="text-gray-500 mt-2">Monitoramento de estoque por categoria e produto</p>
+                </div>
+
+                <!-- Filters Section -->
+                <section class="mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-4">
+                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                            <!-- Search by SKU/Produto -->
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Buscar SKU/Produto</label>
+                                <div class="relative">
+                                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                    <input
+                                        type="text"
+                                        id="search-input"
+                                        placeholder="Digite o SKU ou nome do produto..."
+                                        class="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Categoria Dropdown -->
+                            <div class="w-full md:w-48">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                                <select id="category-filter" class="w-full px-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Todas</option>
+                                    <option value="SACADA">Sacada</option>
+                                    <option value="SC/PE">SC/PE</option>
+                                    <option value="NOGNE">Nogne</option>
+                                    <option value="ADAPTA">Adapta</option>
+                                    <option value="ANTENA">Antena</option>
+                                    <option value="BLOQUE">Bloque</option>
+                                    <option value="CAIXA D">Caixa D</option>
+                                    <option value="CAMERA">Camera</option>
+                                    <option value="COLETIVO">Coletivo</option>
+                                    <option value="COMPUT">Comput</option>
+                                </select>
+                            </div>
+
+                            <!-- Regiao Dropdown -->
+                            <div class="w-full md:w-48">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Regiao</label>
+                                <select id="region-filter" class="w-full px-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Todas</option>
+                                    <option value="Norte">Norte</option>
+                                    <option value="Nordeste">Nordeste</option>
+                                    <option value="Centro-Oeste">Centro-Oeste</option>
+                                    <option value="Sudeste">Sudeste</option>
+                                    <option value="Sul">Sul</option>
+                                </select>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex gap-2">
+                                <button id="apply-filters" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+                                    <i class="bi bi-funnel"></i>
+                                    <span>Aplicar Filtros</span>
+                                </button>
+                                <button id="clear-filters" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                                    <span>Limpar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- KPI Cards Section -->
+                <section class="mb-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Vendas -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-blue-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Vendas</p>
+                                    <p class="text-2xl font-bold text-gray-800 mt-1">101.896</p>
+                                    <p class="text-sm text-green-600 font-medium mt-1">$59.473.544,10</p>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-cart-check text-blue-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Equipamentos -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-purple-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Equipamentos</p>
+                                    <p class="text-2xl font-bold text-gray-800 mt-1">2.038</p>
+                                    <p class="text-sm text-green-600 font-medium mt-1">$59.473.544,10</p>
+                                </div>
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-hdd-stack text-purple-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Material de Instalacao -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-green-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Material de Instalacao</p>
+                                    <p class="text-2xl font-bold text-gray-800 mt-1">115.665</p>
+                                    <p class="text-sm text-green-600 font-medium mt-1">$59.473.544,10</p>
+                                </div>
+                                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-tools text-green-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Material a ser consolidado -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-orange-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Material a Consolidar</p>
+                                    <p class="text-2xl font-bold text-gray-800 mt-1">20.084</p>
+                                    <p class="text-sm text-green-600 font-medium mt-1">$59.473.544,10</p>
+                                </div>
+                                <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-archive text-orange-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Venda de Material -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-teal-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Venda de Material</p>
+                                    <p class="text-2xl font-bold text-teal-600 mt-1">443,59%</p>
+                                    <p class="text-xs text-gray-400 mt-1">Variacao</p>
+                                </div>
+                                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-graph-up-arrow text-teal-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aluguel -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-indigo-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Aluguel</p>
+                                    <p class="text-2xl font-bold text-indigo-600 mt-1">441,39%</p>
+                                    <p class="text-xs text-gray-400 mt-1">Variacao</p>
+                                </div>
+                                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-building text-indigo-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-cyan-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Media</p>
+                                    <p class="text-2xl font-bold text-cyan-600 mt-1">441,39%</p>
+                                    <p class="text-xs text-gray-400 mt-1">Variacao</p>
+                                </div>
+                                <div class="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-calculator text-cyan-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Margem -->
+                        <div class="kpi-card bg-white rounded-xl shadow-sm p-5 border-l-4 border-rose-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-500 font-medium">Margem</p>
+                                    <p class="text-2xl font-bold text-rose-600 mt-1">1,00%</p>
+                                    <p class="text-xs text-gray-400 mt-1">Lucro</p>
+                                </div>
+                                <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
+                                    <i class="bi bi-percent text-rose-500 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Chart Section -->
+                <section class="mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Posicao de Estoque por Categoria</h2>
+                        <div class="relative h-96">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Detailed Table Section -->
+                <section>
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-gray-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <h2 class="text-lg font-semibold text-gray-800">Detalhamento de Estoque</h2>
+                                <div class="flex items-center gap-2">
+                                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center gap-2">
+                                        <i class="bi bi-download"></i>
+                                        <span>Exportar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="data-table w-full">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold">SKU</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold">Produto</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold">Categoria</th>
+                                        <th class="px-4 py-3 text-center text-sm font-semibold">Quantidade</th>
+                                        <th class="px-4 py-3 text-right text-sm font-semibold">Valor Unitario</th>
+                                        <th class="px-4 py-3 text-right text-sm font-semibold">Valor Total</th>
+                                        <th class="px-4 py-3 text-center text-sm font-semibold">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="data-table-body" class="divide-y divide-gray-100">
+                                    <!-- Data will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="p-4 border-t border-gray-100 bg-gray-50">
+                            <p class="text-sm text-gray-500 text-center">
+                                Mostrando <span id="showing-count">10</span> produtos
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+        </div>
+    </div>
+
+    <!-- Mobile Menu Script -->
+    <script src="shared.js"></script>
+    <script>
+        // ============================================
+        // MOBILE MENU FUNCTIONALITY
+        // ============================================
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+            sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('sidebar-open');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // ============================================
+        // CHART INITIALIZATION
+        // ============================================
+        const stockCtx = document.getElementById('stockChart').getContext('2d');
+        const stockChart = new Chart(stockCtx, {
+            type: 'bar',
+            data: {
+                labels: ['SACADA', 'SC/PE', 'NOGNE', 'ADAPTA', 'ANTENA', 'BLOQUE', 'CAIXA D', 'CAMERA', 'COLETIVO', 'COMPUT'],
+                datasets: [{
+                    label: 'Valor em Estoque ($)',
+                    data: [32000000, 15000000, 8000000, 5000000, 3000000, 2500000, 2000000, 1800000, 1500000, 1000000],
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1F2937',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                return '$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#E5E7EB'
+                        },
+                        ticks: {
+                            color: '#6B7280',
+                            font: {
+                                size: 12
+                            },
+                            callback: function(value) {
+                                return '$ ' + (value / 1000000) + 'M';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#6B7280',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ============================================
+        // TABLE DATA
+        // ============================================
+        const tableData = [
+            { sku: 'SK-001', produto: 'Sacada Premium A', categoria: 'SACADA', quantidade: 1500, valorUnitario: 1250.00, status: 'Disponivel' },
+            { sku: 'SK-002', produto: 'Conector SC/PE', categoria: 'SC/PE', quantidade: 3200, valorUnitario: 85.50, status: 'Disponivel' },
+            { sku: 'SK-003', produto: 'Nogne Switch 24P', categoria: 'NOGNE', quantidade: 450, valorUnitario: 1890.00, status: 'Baixo' },
+            { sku: 'SK-004', produto: 'Adaptador Universal', categoria: 'ADAPTA', quantidade: 890, valorUnitario: 125.00, status: 'Disponivel' },
+            { sku: 'SK-005', produto: 'Antena 5GHz', categoria: 'ANTENA', quantidade: 2100, valorUnitario: 320.00, status: 'Disponivel' },
+            { sku: 'SK-006', produto: 'Bloqueador Inteligente', categoria: 'BLOQUE', quantidade: 75, valorUnitario: 450.00, status: 'Critico' },
+            { sku: 'SK-007', produto: 'Caixa Distribuicao', categoria: 'CAIXA D', quantidade: 1800, valorUnitario: 215.00, status: 'Disponivel' },
+            { sku: 'SK-008', produto: 'Camera IP 4MP', categoria: 'CAMERA', quantidade: 120, valorUnitario: 890.00, status: 'Baixo' },
+            { sku: 'SK-009', produto: 'Internet Coletiva', categoria: 'COLETIVO', quantidade: 2000, valorUnitario: 175.00, status: 'Disponivel' },
+            { sku: 'SK-010', produto: 'Computador Industrial', categoria: 'COMPUT', quantidade: 30, valorUnitario: 4500.00, status: 'Critico' }
+        ];
+
+        // ============================================
+        // RENDER TABLE
+        // ============================================
+        function renderTable(data) {
+            const tbody = document.getElementById('data-table-body');
+            const showingCount = document.getElementById('showing-count');
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                            <i class="bi bi-inbox text-3xl block mb-2"></i>
+                            Nenhum produto encontrado
+                        </td>
+                    </tr>
+                `;
+                showingCount.textContent = '0';
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => {
+                const valorTotal = item.quantidade * item.valorUnitario;
+                let statusBadge = '';
+
+                if (item.status === 'Disponivel') {
+                    statusBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"><i class="bi bi-check-circle mr-1"></i>Disponivel</span>';
+                } else if (item.status === 'Baixo') {
+                    statusBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="bi bi-exclamation-triangle mr-1"></i>Baixo</span>';
+                } else {
+                    statusBadge = '<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"><i class="bi bi-x-circle mr-1"></i>Critico</span>';
+                }
+
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 text-sm font-medium text-gray-800">${item.sku}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">${item.produto}</td>
+                        <td class="px-4 py-3">
+                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">${item.categoria}</span>
+                        </td>
+                        <td class="px-4 py-3 text-center text-sm font-semibold text-gray-800">${item.quantidade.toLocaleString('pt-BR')}</td>
+                        <td class="px-4 py-3 text-right text-sm text-gray-700">$ ${item.valorUnitario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td class="px-4 py-3 text-right text-sm font-semibold text-gray-800">$ ${valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                        <td class="px-4 py-3 text-center">${statusBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            showingCount.textContent = data.length.toLocaleString('pt-BR');
+        }
+
+        // ============================================
+        // FILTER FUNCTIONALITY
+        // ============================================
+        function applyFilters() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const categoryFilter = document.getElementById('category-filter').value;
+
+            let filteredData = tableData.filter(item => {
+                const matchesSearch = item.sku.toLowerCase().includes(searchTerm) ||
+                                     item.produto.toLowerCase().includes(searchTerm);
+                const matchesCategory = categoryFilter === '' || item.categoria === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            renderTable(filteredData);
+        }
+
+        // Event Listeners for Filters
+        document.getElementById('apply-filters').addEventListener('click', applyFilters);
+
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+
+        document.getElementById('clear-filters').addEventListener('click', () => {
+            document.getElementById('search-input').value = '';
+            document.getElementById('category-filter').value = '';
+            document.getElementById('region-filter').value = '';
+            renderTable(tableData);
+        });
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable(tableData);
+        });
+    </script>
+</body>
+</html>
