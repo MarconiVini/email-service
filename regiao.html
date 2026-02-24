@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graficos - Admin Dashboard</title>
+    <title>Regiao - Email Engine</title>
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Bootstrap Icons CDN -->
@@ -64,6 +64,22 @@
                 opacity: 1;
                 pointer-events: auto;
             }
+        }
+        /* KPI Card hover effect */
+        .kpi-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        /* Table styling */
+        .data-table th {
+            background-color: #1F2937;
+            color: white;
+        }
+        .data-table tbody tr:hover {
+            background-color: #f3f4f6;
         }
     </style>
 </head>
@@ -146,11 +162,11 @@
                         </a>
                     </li>
 
-                    <!-- Graficos (ACTIVE) -->
+                    <!-- Graficos -->
                     <li>
-                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
                             <i class="bi bi-graph-up text-lg"></i>
-                            <span class="font-medium">Graficos</span>
+                            <span>Graficos</span>
                         </a>
                     </li>
 
@@ -162,11 +178,11 @@
                         </a>
                     </li>
 
-                    <!-- Regiao -->
+                    <!-- Regiao (ACTIVE) -->
                     <li>
-                        <a href="regiao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                        <a href="regiao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
                             <i class="bi bi-geo-alt text-lg"></i>
-                            <span>Regiao</span>
+                            <span class="font-medium">Regiao</span>
                         </a>
                     </li>
 
@@ -272,66 +288,79 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
                 <!-- Page Title -->
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-800">Dashboard de Performance de Representantes</h1>
-                    <p class="text-gray-500 mt-2">Monitoramento automatico de saidas por produto e representante</p>
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">PILOTO CAMERAS ETAPA 1</h1>
+                    <p class="text-gray-500 mt-2">Dashboard de concentracao por regiao</p>
                 </div>
 
-                <!-- Summary Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <!-- Total de Saidas -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4">
-                        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-graph-up-arrow text-blue-500 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm font-medium">Total de Saidas</p>
-                            <p class="text-3xl font-bold text-gray-800">1.240</p>
-                        </div>
-                    </div>
-
-                    <!-- Melhor Representante -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4">
-                        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-person-check text-green-500 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm font-medium">Melhor Representante</p>
-                            <p class="text-2xl font-bold text-gray-800">Carlos Silva</p>
-                        </div>
-                    </div>
-
-                    <!-- Produto Mais Vendido -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 flex items-center gap-4">
-                        <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="bi bi-box-seam text-purple-500 text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-gray-500 text-sm font-medium">Produto Mais Vendido</p>
-                            <p class="text-2xl font-bold text-gray-800">Smartphone X1</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Grid -->
+                <!-- Dashboard Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Bar Chart - Saidas por Representante -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Saidas por Representante</h2>
-                        <div class="relative h-80">
-                            <canvas id="barChart"></canvas>
-                        </div>
+
+                    <!-- Left Column -->
+                    <div class="space-y-6">
+
+                        <!-- Data Table Section -->
+                        <section>
+                            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                                <div class="p-6 border-b border-gray-100">
+                                    <h2 class="text-lg font-semibold text-gray-800">Dados por RT Movimentacao</h2>
+                                </div>
+                                <div class="overflow-x-auto">
+                                    <table class="data-table w-full">
+                                        <thead>
+                                            <tr>
+                                                <th class="px-4 py-3 text-left text-sm font-semibold">RT Movimentacao</th>
+                                                <th class="px-4 py-3 text-center text-sm font-semibold">Contagem de NS</th>
+                                                <th class="px-4 py-3 text-center text-sm font-semibold">Media de Dias</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data-table-body" class="divide-y divide-gray-100">
+                                            <!-- Data will be populated by JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Aging Equipamentos Chart -->
+                        <section>
+                            <div class="bg-white rounded-xl shadow-sm p-6">
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Aging Equipamentos</h2>
+                                <div class="relative h-72">
+                                    <canvas id="agingChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
                     </div>
 
-                    <!-- Donut Chart - Top 5 Produtos -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Top 5 Produtos</h2>
-                        <div class="relative h-80 flex items-center justify-center">
-                            <canvas id="donutChart"></canvas>
-                        </div>
+                    <!-- Right Column -->
+                    <div class="space-y-6">
+
+                        <!-- Pizza Chart - Concentracao por Regiao - UN -->
+                        <section>
+                            <div class="bg-white rounded-xl shadow-sm p-6">
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Concentracao por Regiao - UN</h2>
+                                <div class="relative h-80">
+                                    <canvas id="regionPieChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Bar Chart - Concentracao por Regiao - R$ -->
+                        <section>
+                            <div class="bg-white rounded-xl shadow-sm p-6">
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Concentracao por Regiao - R$</h2>
+                                <div class="relative h-72">
+                                    <canvas id="regionBarChart"></canvas>
+                                </div>
+                            </div>
+                        </section>
+
                     </div>
+
                 </div>
             </main>
 
@@ -339,7 +368,11 @@
     </div>
 
     <!-- Mobile Menu Script -->
+    <script src="shared.js"></script>
     <script>
+        // ============================================
+        // MOBILE MENU FUNCTIONALITY
+        // ============================================
         const menuToggle = document.getElementById('menu-toggle');
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -353,19 +386,75 @@
             sidebar.classList.remove('sidebar-open');
             sidebarOverlay.classList.remove('active');
         });
-    </script>
 
-    <!-- Chart.js Scripts -->
-    <script>
-        // Bar Chart - Saidas por Representante
-        const barCtx = document.getElementById('barChart').getContext('2d');
-        const barChart = new Chart(barCtx, {
+        // ============================================
+        // TABLE DATA
+        // ============================================
+        const tableData = [
+            { rtMovimentacao: 'AZILON COMERCIO E SERVICOS', contagemNS: 191, mediaDias: 62 },
+            { rtMovimentacao: 'LINEA TECNOLOGIA', contagemNS: 162, mediaDias: 64 },
+            { rtMovimentacao: 'S.O.S. COMERCIO E SERVICOS', contagemNS: 143, mediaDias: 58 },
+            { rtMovimentacao: 'DIGITAL VIDEO', contagemNS: 127, mediaDias: 71 },
+            { rtMovimentacao: 'TV PAGA SA', contagemNS: 98, mediaDias: 45 },
+            { rtMovimentacao: 'CABLE NET LTDA', contagemNS: 87, mediaDias: 89 },
+            { rtMovimentacao: 'SKY BRASIL', contagemNS: 76, mediaDias: 52 },
+            { rtMovimentacao: 'CLARO S.A.', contagemNS: 65, mediaDias: 67 },
+            { rtMovimentacao: 'VIVO TELECOM', contagemNS: 54, mediaDias: 43 },
+            { rtMovimentacao: 'OI FIXO', contagemNS: 32, mediaDias: 78 }
+        ];
+
+        // ============================================
+        // RENDER TABLE
+        // ============================================
+        function renderTable() {
+            const tbody = document.getElementById('data-table-body');
+
+            // Find max values for highlighting
+            const maxContagem = Math.max(...tableData.map(item => item.contagemNS));
+            const maxMedia = Math.max(...tableData.map(item => item.mediaDias));
+
+            tbody.innerHTML = tableData.map((item, index) => {
+                let contagemClass = 'text-gray-800';
+                let mediaClass = 'text-gray-800';
+                let rowBg = '';
+
+                // Highlight highest contagem
+                if (item.contagemNS === maxContagem) {
+                    contagemClass = 'text-red-600 font-bold';
+                    rowBg = 'bg-red-50';
+                }
+                // Highlight highest media
+                if (item.mediaDias === maxMedia) {
+                    mediaClass = 'text-red-600 font-bold';
+                    rowBg = 'bg-red-50';
+                }
+                // Highlight values above average
+                const avgMedia = tableData.reduce((acc, curr) => acc + curr.mediaDias, 0) / tableData.length;
+                if (item.mediaDias > avgMedia && item.mediaDias !== maxMedia) {
+                    mediaClass = 'text-yellow-600 font-semibold';
+                }
+
+                return `
+                    <tr class="hover:bg-gray-50 transition-colors ${rowBg}">
+                        <td class="px-4 py-3 text-sm text-gray-700">${item.rtMovimentacao}</td>
+                        <td class="px-4 py-3 text-center text-sm font-semibold ${contagemClass}">${item.contagemNS.toLocaleString('pt-BR')}</td>
+                        <td class="px-4 py-3 text-center text-sm font-semibold ${mediaClass}">${item.mediaDias}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // AGING CHART
+        // ============================================
+        const agingCtx = document.getElementById('agingChart').getContext('2d');
+        const agingChart = new Chart(agingCtx, {
             type: 'bar',
             data: {
-                labels: ['Carlos', 'Ana', 'Joao', 'Maria', 'Bruno'],
+                labels: ['0-45', '46-90', '91-120', '121-150', '151-180', 'Acima 210'],
                 datasets: [{
-                    label: 'Saidas',
-                    data: [420, 350, 280, 200, 180],
+                    label: 'Quantidade',
+                    data: [458, 312, 189, 124, 87, 56],
                     backgroundColor: '#3B82F6',
                     borderRadius: 8,
                     borderSkipped: false,
@@ -377,6 +466,22 @@
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1F2937',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return 'Equipamentos: ' + context.raw.toLocaleString('pt-BR');
+                            }
+                        }
                     }
                 },
                 scales: {
@@ -407,44 +512,155 @@
             }
         });
 
-        // Donut Chart - Top 5 Produtos
-        const donutCtx = document.getElementById('donutChart').getContext('2d');
-        const donutChart = new Chart(donutCtx, {
-            type: 'doughnut',
+        // ============================================
+        // REGION PIE CHART - UN
+        // ============================================
+        const regionPieCtx = document.getElementById('regionPieChart').getContext('2d');
+        const regionPieChart = new Chart(regionPieCtx, {
+            type: 'pie',
             data: {
-                labels: ['Smartphone', 'Notebook', 'Tablet', 'Mouse', 'Camera'],
+                labels: ['Sul', 'Sudeste', 'Centro-Oeste', 'Nordeste', 'Norte'],
                 datasets: [{
-                    data: [40, 20, 15, 15, 10],
+                    data: [41.89, 25.27, 16.70, 16.05, 0.08],
                     backgroundColor: [
-                        '#10B981', // Verde
-                        '#3B82F6', // Azul
-                        '#8B5CF6', // Roxo
-                        '#F59E0B', // Laranja
-                        '#EF4444'  // Vermelho
+                        '#3B82F6',  // Azul - Sul
+                        '#10B981',  // Verde - Sudeste
+                        '#F59E0B',  // Amarelo - Centro-Oeste
+                        '#EF4444',  // Vermelho - Nordeste
+                        '#8B5CF6'   // Roxo - Norte
                     ],
-                    borderWidth: 0,
-                    hoverOffset: 10
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '60%',
                 plugins: {
                     legend: {
-                        position: 'bottom',
+                        position: 'right',
                         labels: {
                             padding: 20,
                             usePointStyle: true,
                             pointStyle: 'circle',
-                            color: '#374151',
                             font: {
-                                size: 13
+                                size: 12
+                            },
+                            generateLabels: function(chart) {
+                                const data = chart.data;
+                                return data.labels.map((label, i) => ({
+                                    text: `${label} (${data.datasets[0].data[i]}%)`,
+                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                    hidden: false,
+                                    index: i
+                                }));
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1F2937',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw + '%';
                             }
                         }
                     }
                 }
             }
+        });
+
+        // ============================================
+        // REGION BAR CHART - R$
+        // ============================================
+        const regionBarCtx = document.getElementById('regionBarChart').getContext('2d');
+        const regionBarChart = new Chart(regionBarCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Sul', 'Sudeste', 'Centro-Oeste', 'Nordeste', 'Norte'],
+                datasets: [{
+                    label: 'Valor (R$)',
+                    data: [14000000, 11600000, 7200000, 6900000, 350000],
+                    backgroundColor: [
+                        '#3B82F6',  // Azul - Sul
+                        '#10B981',  // Verde - Sudeste
+                        '#F59E0B',  // Amarelo - Centro-Oeste
+                        '#EF4444',  // Vermelho - Nordeste
+                        '#8B5CF6'   // Roxo - Norte
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1F2937',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                return 'R$ ' + (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#E5E7EB'
+                        },
+                        ticks: {
+                            color: '#6B7280',
+                            font: {
+                                size: 12
+                            },
+                            callback: function(value) {
+                                return 'R$ ' + (value / 1000000) + 'M';
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#6B7280',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
         });
     </script>
 </body>
