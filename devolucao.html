@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devolucao de Equipamentos - Email Engine</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sidebar: '#1F2937',
+                        'sidebar-hover': '#374151',
+                        'sidebar-active': '#3B82F6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6B7280;
+        }
+        /* Responsive Sidebar */
+        @media (max-width: 767px) {
+            .sidebar-mobile {
+                position: fixed;
+                left: -256px;
+                top: 0;
+                height: 100vh;
+                z-index: 50;
+                transition: left 0.3s ease-in-out;
+            }
+            .sidebar-mobile.sidebar-open {
+                left: 0;
+            }
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 40;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
+            }
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-sidebar text-gray-300 flex flex-col flex-shrink-0 sidebar-mobile">
+            <!-- Logo -->
+            <div class="h-16 flex items-center px-6 border-b border-gray-700">
+                <a href="home.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-envelope-paper-fill text-white text-lg"></i>
+                    </div>
+                    <span class="text-white font-semibold text-lg">Email Engine</span>
+                </a>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 py-6 overflow-y-auto">
+                <ul class="space-y-1 px-3">
+                    <!-- Fluxo de Envio Section -->
+                    <li class="px-3 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fluxo de Envio</span>
+                    </li>
+
+                    <!-- Inicio -->
+                    <li>
+                        <a href="home.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-house text-lg"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload CSV -->
+                    <li>
+                        <a href="upload.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-cloud-upload text-lg"></i>
+                            <span>Upload CSV</span>
+                        </a>
+                    </li>
+
+                    <!-- Agrupamento -->
+                    <li>
+                        <a href="grouping.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-collection text-lg"></i>
+                            <span>Agrupamento</span>
+                        </a>
+                    </li>
+
+                    <!-- Filtros -->
+                    <li>
+                        <a href="filter.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-funnel text-lg"></i>
+                            <span>Filtros</span>
+                        </a>
+                    </li>
+
+                    <!-- Selecao -->
+                    <li>
+                        <a href="recipients.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-people text-lg"></i>
+                            <span>Selecao</span>
+                        </a>
+                    </li>
+
+                    <!-- Envio -->
+                    <li>
+                        <a href="send.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-send text-lg"></i>
+                            <span>Envio</span>
+                        </a>
+                    </li>
+
+                    <!-- Compilacao -->
+                    <li>
+                        <a href="compilacao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-bar-chart-line text-lg"></i>
+                            <span>Compilacao</span>
+                        </a>
+                    </li>
+
+                    <!-- Graficos -->
+                    <li>
+                        <a href="charts.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-graph-up text-lg"></i>
+                            <span>Graficos</span>
+                        </a>
+                    </li>
+
+                    <!-- Posicao -->
+                    <li>
+                        <a href="posicao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-box-seam text-lg"></i>
+                            <span>Posicao</span>
+                        </a>
+                    </li>
+
+                    <!-- Regiao -->
+                    <li>
+                        <a href="regiao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-geo-alt text-lg"></i>
+                            <span>Regiao</span>
+                        </a>
+                    </li>
+
+                    <!-- Devolucao (ATIVO) -->
+                    <li>
+                        <a href="devolucao.html" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sidebar-active text-white transition-colors">
+                            <i class="bi bi-arrow-return-left text-lg"></i>
+                            <span class="font-medium">Devolucao</span>
+                        </a>
+                    </li>
+
+                    <!-- Configuracoes Section -->
+                    <li class="px-3 mt-6 mb-4">
+                        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Configuracoes</span>
+                    </li>
+
+                    <!-- Configuracoes -->
+                    <li>
+                        <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-gear text-lg"></i>
+                            <span>Configuracoes</span>
+                        </a>
+                    </li>
+
+                    <!-- Contrato -->
+                    <li>
+                        <a href="contract.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-file-earmark-text text-lg"></i>
+                            <span>Contrato</span>
+                        </a>
+                    </li>
+
+                    <!-- Ajuda -->
+                    <li>
+                        <a href="help.html" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-hover transition-colors">
+                            <i class="bi bi-question-circle text-lg"></i>
+                            <span>Ajuda</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="bi bi-person-fill text-white text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">Admin User</p>
+                        <p class="text-gray-400 text-xs">admin@email.com</p>
+                    </div>
+                    <button class="text-gray-400 hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-right text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 flex-shrink-0">
+                <!-- Search -->
+                <div class="flex items-center gap-4">
+                    <!-- Mobile Menu Toggle -->
+                    <button id="menu-toggle" onclick="toggleSidebar()" class="md:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-list text-2xl"></i>
+                    </button>
+                    <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        class="pl-10 pr-4 py-2 bg-gray-100 rounded-lg border-none focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                    >
+                    </div>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-bell text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Messages -->
+                    <button class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                        <i class="bi bi-chat-dots text-xl"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+
+                    <!-- Divider -->
+                    <div class="w-px h-8 bg-gray-200"></div>
+
+                    <!-- Profile -->
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="bi bi-person-fill text-white"></i>
+                        </div>
+                        <div class="hidden md:block">
+                            <p class="text-sm font-medium text-gray-700">Admin User</p>
+                        </div>
+                        <i class="bi bi-chevron-down text-gray-400 text-sm"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Page Title -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Devolucao de Equipamentos</h1>
+                    <p class="text-gray-600 mt-2">Modelo de email para solicitacao de devolucao de equipamentos.</p>
+                </div>
+
+                <!-- Email Template Section -->
+                <div class="space-y-6">
+                    <!-- Template Preview -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                    <i class="bi bi-envelope-paper text-xl text-orange-600"></i>
+                                </div>
+                                <h2 class="text-lg font-semibold text-gray-800">Modelo de Email</h2>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="copyTemplate()" class="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                                    <i class="bi bi-clipboard"></i>
+                                    Copiar
+                                </button>
+                                <button onclick="editTemplate()" class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                                    <i class="bi bi-pencil"></i>
+                                    Editar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Email Preview Box -->
+                        <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+                            <!-- Email Header -->
+                            <div class="mb-0 p-4 bg-gray-100 border-b border-gray-200">
+                                <div class="flex items-center gap-2">
+                                    <i class="bi bi-envelope text-gray-500"></i>
+                                    <span class="text-sm font-medium text-gray-500">Assunto:</span>
+                                    <span class="text-sm font-semibold text-gray-800">Solicitacao de Devolucao de Equipamentos</span>
+                                </div>
+                            </div>
+
+                            <!-- Professional Email Template Preview -->
+                            <div id="email-template-preview" style="background: #f4f4f4; padding: 20px;">
+                                <!-- Email Container -->
+                                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <!-- Header with Michelin Branding -->
+                                    <tr>
+                                        <td style="background: linear-gradient(135deg, #0060AE 0%, #004080 100%); padding: 30px 40px; text-align: center;">
+                                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td style="text-align: center;">
+                                                        <!-- Logo Area -->
+                                                        <div style="display: inline-block; background: #ffffff; border-radius: 8px; padding: 12px 24px; margin-bottom: 15px;">
+                                                            <span style="font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; color: #0060AE; letter-spacing: 2px;">MICHELIN</span>
+                                                            <span style="display: block; font-family: Arial, sans-serif; font-size: 10px; color: #666666; letter-spacing: 1px; margin-top: 2px;">CONNECTED FLEET</span>
+                                                        </div>
+                                                        <div style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; letter-spacing: 1px;">
+                                                            <i class="bi bi-truck" style="margin-right: 8px;"></i>SOLICITACAO DE DEVOLUCAO
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- Yellow Accent Line -->
+                                    <tr>
+                                        <td style="height: 4px; background: #FFE600;"></td>
+                                    </tr>
+                                    <!-- Email Body -->
+                                    <tr>
+                                        <td style="padding: 40px;">
+                                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                                <!-- Greeting -->
+                                                <tr>
+                                                    <td style="font-family: Arial, sans-serif; font-size: 16px; color: #333333; line-height: 1.6; padding-bottom: 20px;">
+                                                        Prezado(a) <span style="background: #FFF9C4; padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #0060AE;">[Nome Fantasia]</span>,
+                                                    </td>
+                                                </tr>
+                                                <!-- Main Message -->
+                                                <tr>
+                                                    <td style="font-family: Arial, sans-serif; font-size: 15px; color: #444444; line-height: 1.7; padding-bottom: 25px;">
+                                                        Solicitamos a devolucao dos seguintes equipamentos que se encontram sob sua responsabilidade:
+                                                    </td>
+                                                </tr>
+                                                <!-- Equipment List Card -->
+                                                <tr>
+                                                    <td style="padding-bottom: 25px;">
+                                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8fafc; border-radius: 8px; border-left: 4px solid #0060AE;">
+                                                            <tr>
+                                                                <td style="padding: 20px;">
+                                                                    <div style="font-family: Arial, sans-serif; font-size: 12px; color: #0060AE; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">
+                                                                        <i class="bi bi-box-seam" style="margin-right: 8px;"></i>Equipamentos para Devolucao
+                                                                    </div>
+                                                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td style="padding: 10px 15px; background: #ffffff; border-radius: 6px; margin-bottom: 8px; font-family: Arial, sans-serif; font-size: 14px; color: #333333; border: 1px solid #e5e7eb;">
+                                                                                <i class="bi bi-cpu" style="color: #0060AE; margin-right: 10px;"></i><span style="background: #FFF9C4; padding: 2px 6px; border-radius: 3px;">[Equipamento 1 - modelo / nº de serie]</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr><td style="height: 8px;"></td></tr>
+                                                                        <tr>
+                                                                            <td style="padding: 10px 15px; background: #ffffff; border-radius: 6px; margin-bottom: 8px; font-family: Arial, sans-serif; font-size: 14px; color: #333333; border: 1px solid #e5e7eb;">
+                                                                                <i class="bi bi-cpu" style="color: #0060AE; margin-right: 10px;"></i><span style="background: #FFF9C4; padding: 2px 6px; border-radius: 3px;">[Equipamento 2 - modelo / nº de serie]</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr><td style="height: 8px;"></td></tr>
+                                                                        <tr>
+                                                                            <td style="padding: 10px 15px; background: #ffffff; border-radius: 6px; font-family: Arial, sans-serif; font-size: 14px; color: #333333; border: 1px solid #e5e7eb;">
+                                                                                <i class="bi bi-cpu" style="color: #0060AE; margin-right: 10px;"></i><span style="background: #FFF9C4; padding: 2px 6px; border-radius: 3px;">[Equipamento 3 - modelo / nº de serie]</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <!-- Deadline Alert -->
+                                                <tr>
+                                                    <td style="padding-bottom: 25px;">
+                                                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #FEF3C7; border-radius: 8px; border: 1px solid #F59E0B;">
+                                                            <tr>
+                                                                <td style="padding: 15px 20px;">
+                                                                    <div style="font-family: Arial, sans-serif; font-size: 14px; color: #92400E;">
+                                                                        <i class="bi bi-calendar-event" style="color: #D97706; margin-right: 8px; font-size: 16px;"></i>
+                                                                        <strong>Prazo de devolucao:</strong> <span style="background: #ffffff; padding: 3px 10px; border-radius: 4px; font-weight: 700; color: #0060AE;">[data]</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <!-- Instructions -->
+                                                <tr>
+                                                    <td style="font-family: Arial, sans-serif; font-size: 15px; color: #444444; line-height: 1.7; padding-bottom: 20px;">
+                                                        Pedimos, por gentileza, que os itens sejam encaminhados devidamente embalados e acompanhados de seus respectivos acessorios.
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-family: Arial, sans-serif; font-size: 15px; color: #444444; line-height: 1.7; padding-bottom: 20px;">
+                                                        Caso necessite de orientacoes para envio ou agendamento de coleta, ficamos a disposicao para providenciar a logistica reversa.
+                                                    </td>
+                                                </tr>
+                                                <!-- CTA Button -->
+                                                <tr>
+                                                    <td style="padding-bottom: 30px; text-align: center;">
+                                                        <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                                                            <tr>
+                                                                <td style="background: #0060AE; border-radius: 6px;">
+                                                                    <a href="#" style="display: inline-block; padding: 12px 30px; font-family: Arial, sans-serif; font-size: 14px; color: #ffffff; text-decoration: none; font-weight: bold;">
+                                                                        <i class="bi bi-check-circle" style="margin-right: 8px;"></i>Confirmar Devolucao
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <!-- Closing -->
+                                                <tr>
+                                                    <td style="font-family: Arial, sans-serif; font-size: 15px; color: #444444; line-height: 1.7;">
+                                                        Aguardamos sua confirmacao.<br><br>
+                                                        Atenciosamente,
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="background: #1F2937; padding: 30px 40px;">
+                                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                                <tr>
+                                                    <td style="text-align: center; border-bottom: 1px solid #374151; padding-bottom: 20px; margin-bottom: 20px;">
+                                                        <div style="display: inline-block; background: #ffffff; border-radius: 6px; padding: 8px 16px;">
+                                                            <span style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; color: #0060AE;">MICHELIN</span>
+                                                            <span style="display: inline-block; font-family: Arial, sans-serif; font-size: 8px; color: #666666; margin-left: 8px;">CONNECTED FLEET</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: center; padding-top: 20px;">
+                                                        <div style="font-family: Arial, sans-serif; font-size: 12px; color: #9CA3AF; line-height: 1.6;">
+                                                            <p style="margin: 0 0 8px 0;">
+                                                                <i class="bi bi-geo-alt" style="margin-right: 6px;"></i>Michelin Connected Fleet Brasil
+                                                            </p>
+                                                            <p style="margin: 0 0 8px 0;">
+                                                                <i class="bi bi-envelope" style="margin-right: 6px;"></i>contato@connectedfleet.michelin.com
+                                                            </p>
+                                                            <p style="margin: 0;">
+                                                                <i class="bi bi-globe" style="margin-right: 6px;"></i>connectedfleet.michelin.com
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align: center; padding-top: 20px;">
+                                                        <div style="font-family: Arial, sans-serif; font-size: 10px; color: #6B7280;">
+                                                            Este email foi enviado automaticamente. Por favor, nao responda diretamente.
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variables Section -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="bi bi-braces text-xl text-purple-600"></i>
+                            </div>
+                            <h2 class="text-lg font-semibold text-gray-800">Variaveis Disponiveis</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <code class="text-sm text-purple-600 font-mono">[Nome Fantasia]</code>
+                                <p class="text-xs text-gray-500 mt-1">Nome fantasia do cliente/empresa</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <code class="text-sm text-purple-600 font-mono">[Equipamento X]</code>
+                                <p class="text-xs text-gray-500 mt-1">Lista de equipamentos com modelo e numero de serie</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <code class="text-sm text-purple-600 font-mono">[data]</code>
+                                <p class="text-xs text-gray-500 mt-1">Data limite para devolucao</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-3">
+                        <button class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="bi bi-arrow-counterclockwise mr-2"></i>
+                            Restaurar Padrao
+                        </button>
+                        <button onclick="sendNotification()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition-colors">
+                            <i class="bi bi-send mr-2"></i>
+                            Usar Este Modelo
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
+    <script src="shared.js"></script>
+    <script>
+        function copyTemplate() {
+            const template = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitacao de Devolucao - Michelin Connected Fleet</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0060AE 0%, #004080 100%); padding: 30px 40px; text-align: center;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center">
+                                        <div style="display: inline-block; background: #ffffff; border-radius: 8px; padding: 12px 24px; margin-bottom: 15px;">
+                                            <span style="font-size: 18px; font-weight: bold; color: #0060AE; letter-spacing: 2px;">MICHELIN</span><br>
+                                            <span style="font-size: 10px; color: #666666; letter-spacing: 1px;">CONNECTED FLEET</span>
+                                        </div>
+                                        <div style="color: #ffffff; font-size: 14px; letter-spacing: 1px;">
+                                            SOLICITACAO DE DEVOLUCAO
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Yellow Accent Line -->
+                    <tr>
+                        <td style="height: 4px; background: #FFE600;"></td>
+                    </tr>
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            <p style="font-size: 16px; color: #333333; line-height: 1.6; margin: 0 0 20px 0;">
+                                Prezado(a) <span style="background: #FFF9C4; padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #0060AE;">[Nome Fantasia]</span>,
+                            </p>
+                            <p style="font-size: 15px; color: #444444; line-height: 1.7; margin: 0 0 25px 0;">
+                                Solicitamos a devolucao dos seguintes equipamentos que se encontram sob sua responsabilidade:
+                            </p>
+                            <!-- Equipment List -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f8fafc; border-radius: 8px; border-left: 4px solid #0060AE; margin-bottom: 25px;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <div style="font-size: 12px; color: #0060AE; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">
+                                            Equipamentos para Devolucao
+                                        </div>
+                                        <p style="padding: 10px 15px; background: #ffffff; border-radius: 6px; font-size: 14px; color: #333333; border: 1px solid #e5e7eb; margin: 0 0 8px 0;">
+                                            [Equipamento 1 - modelo / nº de serie]
+                                        </p>
+                                        <p style="padding: 10px 15px; background: #ffffff; border-radius: 6px; font-size: 14px; color: #333333; border: 1px solid #e5e7eb; margin: 0 0 8px 0;">
+                                            [Equipamento 2 - modelo / nº de serie]
+                                        </p>
+                                        <p style="padding: 10px 15px; background: #ffffff; border-radius: 6px; font-size: 14px; color: #333333; border: 1px solid #e5e7eb; margin: 0;">
+                                            [Equipamento 3 - modelo / nº de serie]
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- Deadline Alert -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #FEF3C7; border-radius: 8px; border: 1px solid #F59E0B; margin-bottom: 25px;">
+                                <tr>
+                                    <td style="padding: 15px 20px;">
+                                        <div style="font-size: 14px; color: #92400E;">
+                                            <strong>Prazo de devolucao:</strong> <span style="background: #ffffff; padding: 3px 10px; border-radius: 4px; font-weight: 700; color: #0060AE;">[data]</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="font-size: 15px; color: #444444; line-height: 1.7; margin: 0 0 20px 0;">
+                                Pedimos, por gentileza, que os itens sejam encaminhados devidamente embalados e acompanhados de seus respectivos acessorios.
+                            </p>
+                            <p style="font-size: 15px; color: #444444; line-height: 1.7; margin: 0 0 30px 0;">
+                                Caso necessite de orientacoes para envio ou agendamento de coleta, ficamos a disposicao para providenciar a logistica reversa.
+                            </p>
+                            <p style="font-size: 15px; color: #444444; line-height: 1.7; margin: 0 0 10px 0;">
+                                Aguardamos sua confirmacao.<br><br>
+                                Atenciosamente,
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background: #1F2937; padding: 30px 40px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center" style="border-bottom: 1px solid #374151; padding-bottom: 20px;">
+                                        <div style="display: inline-block; background: #ffffff; border-radius: 6px; padding: 8px 16px;">
+                                            <span style="font-size: 14px; font-weight: bold; color: #0060AE;">MICHELIN</span>
+                                            <span style="font-size: 8px; color: #666666; margin-left: 8px;">CONNECTED FLEET</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="padding-top: 20px;">
+                                        <p style="font-size: 12px; color: #9CA3AF; line-height: 1.6; margin: 0 0 8px 0;">
+                                            Michelin Connected Fleet Brasil
+                                        </p>
+                                        <p style="font-size: 12px; color: #9CA3AF; line-height: 1.6; margin: 0 0 8px 0;">
+                                            contato@connectedfleet.michelin.com
+                                        </p>
+                                        <p style="font-size: 12px; color: #9CA3AF; line-height: 1.6; margin: 0;">
+                                            connectedfleet.michelin.com
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" style="padding-top: 20px;">
+                                        <p style="font-size: 10px; color: #6B7280; margin: 0;">
+                                            Este email foi enviado automaticamente. Por favor, nao responda diretamente.
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+
+            navigator.clipboard.writeText(template).then(() => {
+                if (typeof showToast === 'function') {
+                    showToast('Modelo copiado para a area de transferencia!', 'success');
+                }
+            });
+        }
+
+        function editTemplate() {
+            window.location.href = 'send.html';
+        }
+
+        function sendNotification() {
+            // Notificacao usando notify-send
+            if (typeof showToast === 'function') {
+                showToast('Modelo selecionado! Prossiga para o envio.', 'success');
+            }
+            // Tentar notificacao do sistema se disponivel
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Email Engine', {
+                    body: 'Modelo de devolucao selecionado com sucesso!',
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📧</text></svg>'
+                });
+            }
+        }
+    </script>
+</body>
+</html>
